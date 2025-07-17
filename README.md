@@ -8,6 +8,11 @@ PIX dedicated decoupled module. The goal is create a module that can be used on 
 
 ## EFÍ Bank API Pix
 [Documentation](https://dev.efipay.com.br/docs/api-pix/credenciais/)
+[Code examples](https://github.com/efipay/sdk-python-apis-efi/blob/main/examples/)
+
+## Modobank API Pix
+[Documentation](https://www.docs.pix.modobank.com/)
+[Para desenvolvedores](https://modobank.com/para-desenvolvedores/)
 
 ### Convert .p12 -> .pem
 ```sh
