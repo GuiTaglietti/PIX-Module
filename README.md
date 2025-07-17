@@ -7,11 +7,11 @@ PIX dedicated decoupled module. The goal is create a module that can be used on 
 [BR Code manual](https://www.bcb.gov.br/content/estabilidadefinanceira/spb_docs/ManualBRCode.pdf)
 
 ## EFÍ Bank API Pix
-[Documentation](https://dev.efipay.com.br/docs/api-pix/credenciais/)
+[Documentation](https://dev.efipay.com.br/docs/api-pix/credenciais/) <br>
 [Code examples](https://github.com/efipay/sdk-python-apis-efi/blob/main/examples/)
 
 ## Modobank API Pix
-[Documentation](https://www.docs.pix.modobank.com/) <br>
+[Documentation](https://developers.onz.software/reference/qrcodes/) <br>
 [Para desenvolvedores](https://modobank.com/para-desenvolvedores/)
 
 ### Convert .p12 -> .pem
