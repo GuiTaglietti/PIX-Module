@@ -145,6 +145,7 @@ env.bak/
 venv.bak/
 qrcodes/
 scripts/
+tags
 
 # Spyder project settings
 .spyderproject
