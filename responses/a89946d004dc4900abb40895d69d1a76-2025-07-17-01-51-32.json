@@ -1,0 +1,36 @@
+{
+    "calendario": {
+        "criacao": "2025-07-17T01:01:33.000Z",
+        "expiracao": 3600
+    },
+    "txid": "a89946d004dc4900abb40895d69d1a76",
+    "revisao": 0,
+    "status": "CONCLUIDA",
+    "valor": {
+        "original": "1.00"
+    },
+    "chave": "1cdf9ba-c695-4e3c-b010-abb521a3f1be",
+    "devedor": {
+        "cpf": "18563601059",
+        "nome": "Francisco da Silva"
+    },
+    "solicitacaoPagador": "Cobrança dos serviços prestados.",
+    "loc": {
+        "id": 12,
+        "location": "qrcodespix-h.sejaefi.com.br/v2/45db48ff53744454802921506b1262ff",
+        "tipoCob": "cob",
+        "criacao": "2025-07-17T01:01:33.000Z"
+    },
+    "location": "qrcodespix-h.sejaefi.com.br/v2/45db48ff53744454802921506b1262ff",
+    "pixCopiaECola": "00020101021226850014BR.GOV.BCB.PIX2563qrcodespix-h.sejaefi.com.br/v2/45db48ff53744454802921506b1262ff5204000053039865802BR5905EFISA6008SAOPAULO62070503***63040217",
+    "pix": [
+        {
+            "endToEndId": "E09089356202507170101APIcc4cc7f6",
+            "txid": "a89946d004dc4900abb40895d69d1a76",
+            "valor": "1.00",
+            "chave": "1cdf9ba-c695-4e3c-b010-abb521a3f1be",
+            "horario": "2025-07-17T01:01:33.000Z",
+            "infoPagador": "Teste de pagamento em ambiente sandbox"
+        }
+    ]
+}

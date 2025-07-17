@@ -1,0 +1,374 @@
+{
+    "parametros": {
+        "inicio": "2025-07-16T00:00:00.000Z",
+        "fim": "2025-07-17T00:00:00.000Z",
+        "paginacao": {
+            "paginaAtual": 0,
+            "itensPorPagina": 100,
+            "quantidadeDePaginas": 1,
+            "quantidadeTotalDeItens": 10
+        }
+    },
+    "cobs": [
+        {
+            "calendario": {
+                "criacao": "2025-07-16T21:09:45.000Z",
+                "expiracao": 3600
+            },
+            "txid": "485093354ec64c5e93f807d764eb46eb",
+            "revisao": 0,
+            "status": "CONCLUIDA",
+            "valor": {
+                "original": "1.00"
+            },
+            "chave": "03109929074",
+            "devedor": {
+                "cpf": "18563601059",
+                "nome": "Foobar da Silva"
+            },
+            "solicitacaoPagador": "Cobrança dos serviços prestados.",
+            "loc": {
+                "id": 10,
+                "location": "qrcodespix-h.sejaefi.com.br/v2/21e0cb14abca4c8da52a800d01477d23",
+                "tipoCob": "cob",
+                "criacao": "2025-07-16T21:09:45.000Z"
+            },
+            "location": "qrcodespix-h.sejaefi.com.br/v2/21e0cb14abca4c8da52a800d01477d23",
+            "pixCopiaECola": "00020101021226850014BR.GOV.BCB.PIX2563qrcodespix-h.sejaefi.com.br/v2/21e0cb14abca4c8da52a800d01477d235204000053039865802BR5905EFISA6008SAOPAULO62070503***63045DF0",
+            "pix": [
+                {
+                    "endToEndId": "E09089356202507162109API922cb4d1",
+                    "txid": "485093354ec64c5e93f807d764eb46eb",
+                    "valor": "1.00",
+                    "chave": "03109929074",
+                    "horario": "2025-07-16T21:09:45.000Z",
+                    "infoPagador": "Teste de pagamento em ambiente sandbox"
+                }
+            ]
+        },
+        {
+            "calendario": {
+                "criacao": "2025-07-16T04:09:08.000Z",
+                "expiracao": 3600
+            },
+            "txid": "4248c79a0d184ffda792ca20f3033365",
+            "revisao": 0,
+            "status": "CONCLUIDA",
+            "valor": {
+                "original": "1.00"
+            },
+            "chave": "03109929074",
+            "devedor": {
+                "cpf": "18563601059",
+                "nome": "Foobar da Silva"
+            },
+            "solicitacaoPagador": "Cobrança dos serviços prestados.",
+            "loc": {
+                "id": 9,
+                "location": "qrcodespix-h.sejaefi.com.br/v2/636b51d433ed4bedba603332d977e667",
+                "tipoCob": "cob",
+                "criacao": "2025-07-16T04:09:08.000Z"
+            },
+            "location": "qrcodespix-h.sejaefi.com.br/v2/636b51d433ed4bedba603332d977e667",
+            "pixCopiaECola": "00020101021226850014BR.GOV.BCB.PIX2563qrcodespix-h.sejaefi.com.br/v2/636b51d433ed4bedba603332d977e6675204000053039865802BR5905EFISA6008SAOPAULO62070503***6304B766",
+            "pix": [
+                {
+                    "endToEndId": "E09089356202507160409API6d232783",
+                    "txid": "4248c79a0d184ffda792ca20f3033365",
+                    "valor": "1.00",
+                    "chave": "03109929074",
+                    "horario": "2025-07-16T04:09:08.000Z",
+                    "infoPagador": "Teste de pagamento em ambiente sandbox"
+                }
+            ]
+        },
+        {
+            "calendario": {
+                "criacao": "2025-07-16T04:02:05.000Z",
+                "expiracao": 3600
+            },
+            "txid": "35a434c1df0b4c9d9fb49e3245af9869",
+            "revisao": 0,
+            "status": "CONCLUIDA",
+            "valor": {
+                "original": "1.00"
+            },
+            "chave": "03109929074",
+            "devedor": {
+                "cpf": "18563601059",
+                "nome": "Foobar da Silva"
+            },
+            "solicitacaoPagador": "Cobrança dos serviços prestados.",
+            "loc": {
+                "id": 8,
+                "location": "qrcodespix-h.sejaefi.com.br/v2/dd3a2bb3e0ab4155a219f4f868e914bc",
+                "tipoCob": "cob",
+                "criacao": "2025-07-16T04:02:05.000Z"
+            },
+            "location": "qrcodespix-h.sejaefi.com.br/v2/dd3a2bb3e0ab4155a219f4f868e914bc",
+            "pixCopiaECola": "00020101021226850014BR.GOV.BCB.PIX2563qrcodespix-h.sejaefi.com.br/v2/dd3a2bb3e0ab4155a219f4f868e914bc5204000053039865802BR5905EFISA6008SAOPAULO62070503***63043603",
+            "pix": [
+                {
+                    "endToEndId": "E09089356202507160402API8bb831e2",
+                    "txid": "35a434c1df0b4c9d9fb49e3245af9869",
+                    "valor": "1.00",
+                    "chave": "03109929074",
+                    "horario": "2025-07-16T04:02:05.000Z",
+                    "infoPagador": "Teste de pagamento em ambiente sandbox"
+                }
+            ]
+        },
+        {
+            "calendario": {
+                "criacao": "2025-07-16T03:58:21.000Z",
+                "expiracao": 3600
+            },
+            "txid": "289e618df11e4652bf139a9ea06423b4",
+            "revisao": 0,
+            "status": "CONCLUIDA",
+            "valor": {
+                "original": "1.00"
+            },
+            "chave": "03109929074",
+            "devedor": {
+                "cpf": "18563601059",
+                "nome": "Foobar da Silva"
+            },
+            "solicitacaoPagador": "Cobrança dos serviços prestados.",
+            "loc": {
+                "id": 7,
+                "location": "qrcodespix-h.sejaefi.com.br/v2/683e30d8ba6d4a3ca4ce093843247615",
+                "tipoCob": "cob",
+                "criacao": "2025-07-16T03:58:21.000Z"
+            },
+            "location": "qrcodespix-h.sejaefi.com.br/v2/683e30d8ba6d4a3ca4ce093843247615",
+            "pixCopiaECola": "00020101021226850014BR.GOV.BCB.PIX2563qrcodespix-h.sejaefi.com.br/v2/683e30d8ba6d4a3ca4ce0938432476155204000053039865802BR5905EFISA6008SAOPAULO62070503***630458C6",
+            "pix": [
+                {
+                    "endToEndId": "E09089356202507160358APIb61e17db",
+                    "txid": "289e618df11e4652bf139a9ea06423b4",
+                    "valor": "1.00",
+                    "chave": "03109929074",
+                    "horario": "2025-07-16T03:58:21.000Z",
+                    "infoPagador": "Teste de pagamento em ambiente sandbox"
+                }
+            ]
+        },
+        {
+            "calendario": {
+                "criacao": "2025-07-16T03:57:18.000Z",
+                "expiracao": 3600
+            },
+            "txid": "33de8370b4764f71a40974ded77c65dd",
+            "revisao": 0,
+            "status": "CONCLUIDA",
+            "valor": {
+                "original": "1.00"
+            },
+            "chave": "03109929074",
+            "devedor": {
+                "cpf": "18563601059",
+                "nome": "Foobar da Silva"
+            },
+            "solicitacaoPagador": "Cobrança dos serviços prestados.",
+            "loc": {
+                "id": 6,
+                "location": "qrcodespix-h.sejaefi.com.br/v2/12ff088f11c248d682b4d774be20ca50",
+                "tipoCob": "cob",
+                "criacao": "2025-07-16T03:57:18.000Z"
+            },
+            "location": "qrcodespix-h.sejaefi.com.br/v2/12ff088f11c248d682b4d774be20ca50",
+            "pixCopiaECola": "00020101021226850014BR.GOV.BCB.PIX2563qrcodespix-h.sejaefi.com.br/v2/12ff088f11c248d682b4d774be20ca505204000053039865802BR5905EFISA6008SAOPAULO62070503***630409EB",
+            "pix": [
+                {
+                    "endToEndId": "E09089356202507160357APIb1dcb4c4",
+                    "txid": "33de8370b4764f71a40974ded77c65dd",
+                    "valor": "1.00",
+                    "chave": "03109929074",
+                    "horario": "2025-07-16T03:57:18.000Z",
+                    "infoPagador": "Teste de pagamento em ambiente sandbox"
+                }
+            ]
+        },
+        {
+            "calendario": {
+                "criacao": "2025-07-16T03:56:25.000Z",
+                "expiracao": 3600
+            },
+            "txid": "4324978d102c453ca03e143cf0314ac6",
+            "revisao": 0,
+            "status": "CONCLUIDA",
+            "valor": {
+                "original": "1.00"
+            },
+            "chave": "03109929074",
+            "devedor": {
+                "cpf": "18563601059",
+                "nome": "Foobar da Silva"
+            },
+            "solicitacaoPagador": "Cobrança dos serviços prestados.",
+            "loc": {
+                "id": 5,
+                "location": "qrcodespix-h.sejaefi.com.br/v2/8e816f9a81614948a196edf4ec3380ef",
+                "tipoCob": "cob",
+                "criacao": "2025-07-16T03:56:25.000Z"
+            },
+            "location": "qrcodespix-h.sejaefi.com.br/v2/8e816f9a81614948a196edf4ec3380ef",
+            "pixCopiaECola": "00020101021226850014BR.GOV.BCB.PIX2563qrcodespix-h.sejaefi.com.br/v2/8e816f9a81614948a196edf4ec3380ef5204000053039865802BR5905EFISA6008SAOPAULO62070503***63043630",
+            "pix": [
+                {
+                    "endToEndId": "E09089356202507160356API7682d3af",
+                    "txid": "4324978d102c453ca03e143cf0314ac6",
+                    "valor": "1.00",
+                    "chave": "03109929074",
+                    "horario": "2025-07-16T03:56:25.000Z",
+                    "infoPagador": "Teste de pagamento em ambiente sandbox"
+                }
+            ]
+        },
+        {
+            "calendario": {
+                "criacao": "2025-07-16T03:19:04.000Z",
+                "expiracao": 3600
+            },
+            "txid": "7a59949c2b6c45e29aeea7b58c8473a8",
+            "revisao": 0,
+            "status": "CONCLUIDA",
+            "valor": {
+                "original": "1.00"
+            },
+            "chave": "03109929074",
+            "devedor": {
+                "cpf": "03109929074",
+                "nome": "Guilherme Dalmas Ganassini"
+            },
+            "solicitacaoPagador": "Cobrança dos serviços prestados.",
+            "loc": {
+                "id": 4,
+                "location": "qrcodespix-h.sejaefi.com.br/v2/392a31494ae4468993a5325fa91e2998",
+                "tipoCob": "cob",
+                "criacao": "2025-07-16T03:19:04.000Z"
+            },
+            "location": "qrcodespix-h.sejaefi.com.br/v2/392a31494ae4468993a5325fa91e2998",
+            "pixCopiaECola": "00020101021226850014BR.GOV.BCB.PIX2563qrcodespix-h.sejaefi.com.br/v2/392a31494ae4468993a5325fa91e29985204000053039865802BR5905EFISA6008SAOPAULO62070503***6304B37A",
+            "pix": [
+                {
+                    "endToEndId": "E09089356202507160319API01971278",
+                    "txid": "7a59949c2b6c45e29aeea7b58c8473a8",
+                    "valor": "1.00",
+                    "chave": "03109929074",
+                    "horario": "2025-07-16T03:19:04.000Z",
+                    "infoPagador": "Teste de pagamento em ambiente sandbox"
+                }
+            ]
+        },
+        {
+            "calendario": {
+                "criacao": "2025-07-16T03:07:41.000Z",
+                "expiracao": 3600
+            },
+            "txid": "1d78e542eb5a434bba75a1e8bacea309",
+            "revisao": 0,
+            "status": "CONCLUIDA",
+            "valor": {
+                "original": "1.00"
+            },
+            "chave": "03109929074",
+            "devedor": {
+                "cpf": "03109929074",
+                "nome": "Guilherme Dalmas Ganassini"
+            },
+            "solicitacaoPagador": "Cobrança dos serviços prestados.",
+            "loc": {
+                "id": 3,
+                "location": "qrcodespix-h.sejaefi.com.br/v2/dc4505e9e36f4e6682c17a6a08cf7dfe",
+                "tipoCob": "cob",
+                "criacao": "2025-07-16T03:07:42.000Z"
+            },
+            "location": "qrcodespix-h.sejaefi.com.br/v2/dc4505e9e36f4e6682c17a6a08cf7dfe",
+            "pixCopiaECola": "00020101021226850014BR.GOV.BCB.PIX2563qrcodespix-h.sejaefi.com.br/v2/dc4505e9e36f4e6682c17a6a08cf7dfe5204000053039865802BR5905EFISA6008SAOPAULO62070503***630442D9",
+            "pix": [
+                {
+                    "endToEndId": "E09089356202507160307API5230ea38",
+                    "txid": "1d78e542eb5a434bba75a1e8bacea309",
+                    "valor": "1.00",
+                    "chave": "03109929074",
+                    "horario": "2025-07-16T03:07:41.000Z",
+                    "infoPagador": "Teste de pagamento em ambiente sandbox"
+                }
+            ]
+        },
+        {
+            "calendario": {
+                "criacao": "2025-07-16T02:24:25.000Z",
+                "expiracao": 3600
+            },
+            "txid": "88a5f33b8b2643a6bca6360c9a409d9d",
+            "revisao": 0,
+            "status": "CONCLUIDA",
+            "valor": {
+                "original": "1.00"
+            },
+            "chave": "03109929074",
+            "devedor": {
+                "cpf": "03109929074",
+                "nome": "Guilherme Dalmas Ganassini"
+            },
+            "solicitacaoPagador": "Cobrança dos serviços prestados.",
+            "loc": {
+                "id": 2,
+                "location": "qrcodespix-h.sejaefi.com.br/v2/330f038c3113482eaaba252279279cf9",
+                "tipoCob": "cob",
+                "criacao": "2025-07-16T02:24:25.000Z"
+            },
+            "location": "qrcodespix-h.sejaefi.com.br/v2/330f038c3113482eaaba252279279cf9",
+            "pixCopiaECola": "00020101021226850014BR.GOV.BCB.PIX2563qrcodespix-h.sejaefi.com.br/v2/330f038c3113482eaaba252279279cf95204000053039865802BR5905EFISA6008SAOPAULO62070503***6304C2D7",
+            "pix": [
+                {
+                    "endToEndId": "E09089356202507160224APIc60d4f56",
+                    "txid": "88a5f33b8b2643a6bca6360c9a409d9d",
+                    "valor": "1.00",
+                    "chave": "03109929074",
+                    "horario": "2025-07-16T02:24:25.000Z",
+                    "infoPagador": "Teste de pagamento em ambiente sandbox"
+                }
+            ]
+        },
+        {
+            "calendario": {
+                "criacao": "2025-07-16T01:57:51.000Z",
+                "expiracao": 3600
+            },
+            "txid": "3d1bed9275f844c4bd9472fa3145094b",
+            "revisao": 0,
+            "status": "CONCLUIDA",
+            "valor": {
+                "original": "1.00"
+            },
+            "chave": "03109929074",
+            "devedor": {
+                "cpf": "03109929074",
+                "nome": "Guilherme Dalmas Ganassini"
+            },
+            "solicitacaoPagador": "Cobrança dos serviços prestados.",
+            "loc": {
+                "id": 1,
+                "location": "qrcodespix-h.sejaefi.com.br/v2/228529b95ce84d03ab0ff52c065919e4",
+                "tipoCob": "cob",
+                "criacao": "2025-07-16T01:57:51.000Z"
+            },
+            "location": "qrcodespix-h.sejaefi.com.br/v2/228529b95ce84d03ab0ff52c065919e4",
+            "pixCopiaECola": "00020101021226850014BR.GOV.BCB.PIX2563qrcodespix-h.sejaefi.com.br/v2/228529b95ce84d03ab0ff52c065919e45204000053039865802BR5905EFISA6008SAOPAULO62070503***6304960F",
+            "pix": [
+                {
+                    "endToEndId": "E09089356202507160157API3a7dea62",
+                    "txid": "3d1bed9275f844c4bd9472fa3145094b",
+                    "valor": "1.00",
+                    "chave": "03109929074",
+                    "horario": "2025-07-16T01:57:51.000Z",
+                    "infoPagador": "Teste de pagamento em ambiente sandbox"
+                }
+            ]
+        }
+    ]
+}
