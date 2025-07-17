@@ -1,1 +1,2 @@
 efipay
+qrcode[pil]
