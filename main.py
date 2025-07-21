@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
+#
+# Just to test the API until the backend is ready
 
-from pix.Pix import Pix
-import argparse
+from pix.Modobank import Pix
 from sys import argv
+import argparse
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
-                description="EFI Bank Pix API Wrapper"
+                description="Modobank Pix API Wrapper"
             )
     parser.add_argument("-a", "--amount", help="specifies the value to be paid")
     parser.add_argument("-c", "--create-charge", help="create a new charge of AMOUNT", action='store_true')
@@ -37,15 +39,15 @@ def main():
     pix = Pix()
 
     if args.list_charges:
-        response = pix.list_charges(inicio="2025-07-16T00:00:00Z", fim="2025-07-17T00:00:00Z")
+        response = pix.list_cobs(inicio="2025-07-16T00:00:00Z", fim="2025-07-17T00:00:00Z")
         print(response)
         return
     elif args.txid:
-        response = pix.detail_single_charge(args.txid)
+        response = pix.detail_cob(args.txid)
         print(response)
         return
     else:
-        response = pix.make_cob(args.amount)
+        response = pix.create_cob(args.amount)
         print(response)
         return
     
