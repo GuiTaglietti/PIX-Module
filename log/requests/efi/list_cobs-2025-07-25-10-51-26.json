@@ -1,0 +1,76 @@
+{
+    "parametros": {
+        "inicio": "2025-07-25T00:00:00.000Z",
+        "fim": "2025-07-25T23:59:00.000Z",
+        "paginacao": {
+            "paginaAtual": 0,
+            "itensPorPagina": 100,
+            "quantidadeDePaginas": 1,
+            "quantidadeTotalDeItens": 2
+        }
+    },
+    "cobs": [
+        {
+            "calendario": {
+                "criacao": "2025-07-25T13:32:54.000Z",
+                "expiracao": 600
+            },
+            "txid": "f2f2960183954f3a9e70f77bcc577add",
+            "revisao": 0,
+            "status": "CONCLUIDA",
+            "valor": {
+                "original": "1.00"
+            },
+            "chave": "03109929074",
+            "devedor": {
+                "cpf": "12345678909",
+                "nome": "Francisco da Silva"
+            },
+            "solicitacaoPagador": "Serviço realizado.",
+            "loc": {
+                "id": 15,
+                "location": "qrcodespix-h.sejaefi.com.br/v2/afc8cd691d584b5bbd88edf1f30c57d6",
+                "tipoCob": "cob",
+                "criacao": "2025-07-25T13:32:54.000Z"
+            },
+            "location": "qrcodespix-h.sejaefi.com.br/v2/afc8cd691d584b5bbd88edf1f30c57d6",
+            "pixCopiaECola": "00020101021226850014BR.GOV.BCB.PIX2563qrcodespix-h.sejaefi.com.br/v2/afc8cd691d584b5bbd88edf1f30c57d65204000053039865802BR5905EFISA6008SAOPAULO62070503***63047D3F",
+            "pix": [
+                {
+                    "endToEndId": "E09089356202507251332API3752e118",
+                    "txid": "f2f2960183954f3a9e70f77bcc577add",
+                    "valor": "1.00",
+                    "chave": "03109929074",
+                    "horario": "2025-07-25T13:32:54.000Z",
+                    "infoPagador": "Teste de pagamento em ambiente sandbox"
+                }
+            ]
+        },
+        {
+            "calendario": {
+                "criacao": "2025-07-25T13:20:53.000Z",
+                "expiracao": 3600
+            },
+            "txid": "2b41b8ffc057402a898896528e595ea9",
+            "revisao": 0,
+            "status": "ATIVA",
+            "valor": {
+                "original": "124.45"
+            },
+            "chave": "03109929074",
+            "devedor": {
+                "cpf": "12345678909",
+                "nome": "Francisco da Silva"
+            },
+            "solicitacaoPagador": "Informe o número ou identificador do pedido.",
+            "loc": {
+                "id": 14,
+                "location": "qrcodespix-h.sejaefi.com.br/v2/08839e1441cc4abd9b86cc913878657c",
+                "tipoCob": "cob",
+                "criacao": "2025-07-25T13:20:53.000Z"
+            },
+            "location": "qrcodespix-h.sejaefi.com.br/v2/08839e1441cc4abd9b86cc913878657c",
+            "pixCopiaECola": "00020101021226850014BR.GOV.BCB.PIX2563qrcodespix-h.sejaefi.com.br/v2/08839e1441cc4abd9b86cc913878657c5204000053039865802BR5905EFISA6008SAOPAULO62070503***63048EBE"
+        }
+    ]
+}

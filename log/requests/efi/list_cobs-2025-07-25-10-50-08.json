@@ -1,0 +1,11 @@
+{
+    "nome": "json_invalido",
+    "mensagem": "Valores ou tipos de campo inválidos",
+    "erros": [
+        {
+            "chave": "required",
+            "caminho": "",
+            "mensagem": "deve ter a propriedade obrigatória query"
+        }
+    ]
+}

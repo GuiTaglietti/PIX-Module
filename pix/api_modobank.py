@@ -9,7 +9,7 @@ from datetime import datetime
 class Pix:
     def __init__(self):
         self.api_keys = self._get_api_keys()
-        self.domain = "https://secureapi.onz.finance"
+        self.domain = "https://v3.qrcodes.sulcredi.coop.br"
 
 
     def _get_api_keys(self) -> dict:

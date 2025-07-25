@@ -10,10 +10,6 @@ PIX dedicated decoupled module. The goal is create a module that can be used on 
 [Documentation](https://dev.efipay.com.br/docs/api-pix/credenciais/) <br>
 [Code examples](https://github.com/efipay/sdk-python-apis-efi/blob/main/examples/)
 
-## Modobank API Pix
-[Documentation](https://developers.onz.software/reference/qrcodes/) <br>
-[Para desenvolvedores](https://modobank.com/para-desenvolvedores/)
-
 ### Convert .p12 -> .pem
 ```sh
 $ openssl pkcs12 -in certificado.p12 -out certificado.pem -nodes -password pass:""
