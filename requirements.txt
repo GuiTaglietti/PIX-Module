@@ -1,5 +1,5 @@
 requests
 datetime 
 qrcode[pil]
-efipay
 psycopg2
+urllib3

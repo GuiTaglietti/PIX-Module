@@ -2,18 +2,19 @@
 #
 # Just to test the API until the backend is ready
 
-from pix.api_modobank import Pix
+from pix.api import Pix
 from sys import argv
 import argparse
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Modobank Pix API Wrapper")
-    # TODO: inicio/fim args
     parser.add_argument("-a", "--amount", help="specifies the value to be paid")
-    parser.add_argument("-c", "--create-charge", help="create a new charge of AMOUNT", action='store_true')
-    parser.add_argument("-l", "--list-charges", help="list last charges", action='store_true')
-    parser.add_argument("-x", "--txid", help="consult charge by txid")
+    parser.add_argument("-c", "--create-cob", help="create a new immediate cob of AMOUNT", action='store_true')
+    parser.add_argument("-l", "--list-cobs", help="list last cobs", action='store_true')
+    parser.add_argument("-i", "--inicio", help="date in yyyy-mm-dd-hh-mm-ss")
+    parser.add_argument("-f", "--fim", help="date in yyyy-mm-dd-hh-mm-ss")
+    parser.add_argument("-x", "--txid", help="consult cob by txid")
     parser.add_argument("-t", "--test-args", help="list provided arguments", action='store_true')
     args = parser.parse_args()
     
@@ -23,18 +24,22 @@ def parse_args():
     if args.test_args:
         print(args)
         exit(0)
-    if args.create_charge:
+    if args.create_cob:
         if not args.amount:
             parser.print_help()
             exit(1)
+    if args.list_cobs and (not (args.inicio and args.fim)):
+        parser.print_help()
+        exit(1)
+
     return args
 
 def main():
     args = parse_args()
     pix = Pix()
 
-    if args.list_charges:
-        response = pix.list_cobs(inicio="2025-07-16T00:00:00Z", fim="2025-07-17T00:00:00Z")
+    if args.list_cobs:
+        response = pix.list_cobs(inicio=args.inicio, fim=args.fim)
         print(response)
         return
     elif args.txid:
@@ -42,7 +47,7 @@ def main():
         print(response)
         return
     else:
-        response = pix.create_cob(args.amount)
+        response = pix.create_cob(args.amount, pix_key="03109929074")
         print(response)
         return
     

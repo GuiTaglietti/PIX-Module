@@ -6,11 +6,6 @@ PIX dedicated decoupled module. The goal is create a module that can be used on 
 [PSPs in non-compliance with the Pix API Regulation](https://github.com/bacen/pix-api/issues/560) <br>
 [BR Code manual](https://www.bcb.gov.br/content/estabilidadefinanceira/spb_docs/ManualBRCode.pdf)
 
-## EFÍ Bank API Pix
-[Documentation](https://dev.efipay.com.br/docs/api-pix/credenciais/) <br>
-[Code examples](https://github.com/efipay/sdk-python-apis-efi/blob/main/examples/)
-
-### Convert .p12 -> .pem
-```sh
-$ openssl pkcs12 -in certificado.p12 -out certificado.pem -nodes -password pass:""
-```
+## Modobank API Pix
+[Documentation](https://developers.onz.software/reference/qrcodes/) <br>
+[Para desenvolvedores](https://modobank.com/para-desenvolvedores/)

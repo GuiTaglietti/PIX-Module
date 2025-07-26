@@ -1,0 +1,1315 @@
+{
+	"info": {
+		"_postman_id": "63f737d7-fb68-4a28-b53f-6039b18b492d",
+		"name": "Onz Cash-in",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6893027"
+	},
+	"item": [
+		{
+			"name": "Gerenciamento de notificações",
+			"item": [
+				{
+					"name": "Configurar o Webhook Pix",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{qrCodeBearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"webhookUrl\": \"URL\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{cashInbaseUrl}}/webhook/{{qrcode_chave_pix}}",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"webhook",
+								"{{qrcode_chave_pix}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Exibir informações acerca do Webhook Pix",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cashInbaseUrl}}/webhook/{{qrcode_chave_pix}}",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"webhook",
+								"{{qrcode_chave_pix}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancelar o webhook Pix",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{cashInbaseUrl}}/webhook/{chavepix}",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"webhook",
+								"{chavepix}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar webhooks cadastrados Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{qrCodeBearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cashInbaseUrl}}/webhook?inicio=2023-01-01T00:00:00Z&fim=2024-12-18T23:59:59Z",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"webhook"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "2023-01-01T00:00:00Z"
+								},
+								{
+									"key": "fim",
+									"value": "2024-12-18T23:59:59Z"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gerenciamento de cobranças para pagamento imediato",
+			"item": [
+				{
+					"name": "Criar cobrança imediata",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{qrCodeBearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"calendario\": {\r\n        \"expiracao\": 3600\r\n    },\r\n    \"valor\": {\r\n        \"original\": \"0.03\",\r\n        \"modalidadeAlteracao\": 0\r\n    },\r\n    \"infoAdicionais\": [\r\n        {\r\n            \"nome\": \"AVISO\",\r\n            \"valor\": \"Pagamento\"\r\n        }\r\n    ],\r\n    \"chave\": \"{{qrcode_chave_pix}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{cashInbaseUrl}}/cob",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"cob"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar cobrança imediata",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{qrCodeBearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"calendario\": {\r\n        \"expiracao\": 3600\r\n    },\r\n    \"valor\": {\r\n        \"original\": \"0.22\",\r\n        \"modalidadeAlteracao\": 0\r\n    },\r\n    \"chave\": \"{{qrcode_chave_pix}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{cashInbaseUrl}}/cob/0123456789fff3456789012349z",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"cob",
+								"0123456789fff3456789012349z"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Revisar cobrança imediata",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"calendario\": {\r\n        \"expiracao\": 3600\r\n    },\r\n    \"devedor\": {\r\n        \"cpf\": \"55593421579\",\r\n        \"nome\": \"Marcio Samtos\"\r\n    },\r\n    \"valor\": {\r\n        \"original\": \"0.15\"\r\n    },\r\n    \"chave\": \"{{qrcode_chave_pix}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{cashInbaseUrl}}/cob/:txId",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"cob",
+								":txId"
+							],
+							"variable": [
+								{
+									"key": "txId",
+									"value": "01234567890123456789012349"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar cobrança imediata",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cashInbaseUrl}}/cob/:txtId",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"cob",
+								":txtId"
+							],
+							"variable": [
+								{
+									"key": "txtId",
+									"value": "HELPSIST00000000084BBBBBBBBBB"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar lista de cobranças imediatas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cashInbaseUrl}}/cob?inicio=2025-01-01T00:00:00Z&fim=2025-12-18T23:59:59Z",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"cob"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "2025-01-01T00:00:00Z"
+								},
+								{
+									"key": "fim",
+									"value": "2025-12-18T23:59:59Z"
+								},
+								{
+									"key": "cpf",
+									"value": "55593421579",
+									"disabled": true
+								},
+								{
+									"key": "cnpj",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "ATIVA",
+									"description": "ATIVA, CONCLUIDA, REMOVIDA_PELO_USUARIO_RECEBEDOR, REMOVIDA_PELO_PSP",
+									"disabled": true
+								},
+								{
+									"key": "paginacao.itensPorPagina",
+									"value": "5",
+									"disabled": true
+								},
+								{
+									"key": "paginacao.paginaAtual",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar pix e2e",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cashInbaseUrl}}/pix/:e2e",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"pix",
+								":e2e"
+							],
+							"variable": [
+								{
+									"key": "e2e",
+									"value": "E0825353920240130172754999729410"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gerenciamento de Pix recebidos",
+			"item": [
+				{
+					"name": "Consultar Pix",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{qrCodeBearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cashInbaseUrl}}/pix/:e2e",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"pix",
+								":e2e"
+							],
+							"variable": [
+								{
+									"key": "e2e",
+									"value": "E0825353920240322162640505c5385b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar Pix recebidos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{qrCodeBearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cashInbaseUrl}}/pix?inicio=2024-03-14T00:00:00Z&fim=2024-03-15T23:59:59Z",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"pix"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "2024-03-14T00:00:00Z"
+								},
+								{
+									"key": "txid",
+									"value": "iKzd91Nfxp9Ra4APHa4dbU9raUa2BWRddd",
+									"disabled": true
+								},
+								{
+									"key": "fim",
+									"value": "2024-03-15T23:59:59Z"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Solicitar devolução",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{qrCodeBearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"valor\": \"0.03\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{cashInbaseUrl}}/pix/:e2e/devolucao/64e63bb47a4db89f27933f7259526a",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"pix",
+								":e2e",
+								"devolucao",
+								"64e63bb47a4db89f27933f7259526a"
+							],
+							"variable": [
+								{
+									"key": "e2e",
+									"value": "E0825353920240725142920415d832bc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Criar cobrança com vencimento",
+			"item": [
+				{
+					"name": "Consultar cobrança com vencimento",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cashInbaseUrl}}/cobv/:txId",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"cobv",
+								":txId"
+							],
+							"variable": [
+								{
+									"key": "txId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar cobrança com vencimento",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"devedor\": {\n    \"logradouro\": \"Alameda Souza, Numero 80, Bairro Braz\",\n    \"cidade\": \"Sao Miguel\",\n    \"uf\": \"SC\",\n    \"cep\": \"89900000\",\n    \"cpf\": \"55593421579\",\n    \"nome\": \"Marcos Alvez\"\n  },\n  \"valor\": {\n    \"original\": \"20.05\",\n    \"multa\": {\n      \"modalidade\": \"2\",\n      \"valorPerc\": \"15.00\"\n    },\n    \"juros\": {\n      \"modalidade\": \"2\",\n      \"valorPerc\": \"2.00\"\n    },\n    \"desconto\": {\n      \"modalidade\": \"1\",\n      \"descontoDataFixa\": [\n        {\n          \"data\": \"2021-11-30\",\n          \"valorPerc\": \"1.00\"\n        }\n      ]\n    }\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{cashInbaseUrl}}/cobv/{{random_txId}}",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"cobv",
+								"{{random_txId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar cobrança com vencimento Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function randomTxId() {",
+									"    let orig = pm.variables.replaceIn(\"{{$guid}}\");",
+									"    let clean = orig.replace(/-/g, \"\");",
+									"    return clean;",
+									"}",
+									"pm.environment.set(\"random_txId\", randomTxId());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{qrCodeBearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"calendario\": {\n    \"dataDeVencimento\": \"2021-12-31\",\n    \"validadeAposVencimento\": 30\n  },\n  \"devedor\": {\n    \"logradouro\": \"Rua A\",\n    \"cidade\": \"Porto Alegre\",\n    \"uf\": \"RS\",\n    \"cep\": \"89900000\",\n    \"cpf\": \"55593421579\",\n    \"nome\": \"Luiz Silveira\"\n  },\n  \"valor\": {\n    \"original\": \"20.05\",\n    \"multa\": {\n      \"modalidade\": \"2\",\n      \"valorPerc\": \"15.00\"\n    },\n    \"juros\": {\n      \"modalidade\": \"2\",\n      \"valorPerc\": \"2.00\"\n    },\n    \"desconto\": {\n      \"modalidade\": \"1\",\n      \"descontoDataFixa\": [\n        {\n          \"data\": \"2021-11-30\",\n          \"valorPerc\": \"1.00\"\n        }\n      ]\n    }\n  },\n  \"chave\": \"{{qrcode_chave_pix}}\",\n  \"solicitacaoPagador\": \"Que cor você deseja?\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{cashInbaseUrl}}/cobv/{{random_txId}}",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"cobv",
+								"{{random_txId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar lista de cobranças com vencimento",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cashInbaseUrl}}/cobv?inicio=2020-04-01T00:00:00Z&fim=2023-06-01T00:00:00Z",
+							"host": [
+								"{{cashInbaseUrl}}"
+							],
+							"path": [
+								"cobv"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "2020-04-01T00:00:00Z"
+								},
+								{
+									"key": "fim",
+									"value": "2023-06-01T00:00:00Z"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pix Automático",
+			"item": [
+				{
+					"name": "Gerenciamento de cobrança recorrente",
+					"item": [
+						{
+							"name": "Gerenciamento de notificações de recorrências",
+							"item": [
+								{
+									"name": "Configurar Webhook",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"webhookUrl\": \"https://webhook.site/be27beb2-ebd7-4b4a-b701-719b900e5968\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{cashInbaseUrl}}/webhookrec",
+											"host": [
+												"{{cashInbaseUrl}}"
+											],
+											"path": [
+												"webhookrec"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Exibir informações acerca do Webhook.",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{cashInbaseUrl}}/webhookrec",
+											"host": [
+												"{{cashInbaseUrl}}"
+											],
+											"path": [
+												"webhookrec"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cancelar o Webhook",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{cashInbaseUrl}}/webhookrec",
+											"host": [
+												"{{cashInbaseUrl}}"
+											],
+											"path": [
+												"webhookrec"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Consultar lista de recorrências.",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{cashInbaseUrl}}/rec?inicio=2025-01-01T00:00:00Z&fim=2025-06-01T00:00:00Z",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"rec"
+									],
+									"query": [
+										{
+											"key": "inicio",
+											"value": "2025-01-01T00:00:00Z",
+											"description": "Mandatory"
+										},
+										{
+											"key": "fim",
+											"value": "2025-06-01T00:00:00Z",
+											"description": "Mandatory"
+										},
+										{
+											"key": "cpf",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "cnpj",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "locationPresente",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "convenio",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "paginacao.paginaAtual",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "paginacao.itensPorPagina",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Consultar recorrência",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{cashInbaseUrl}}/rec/:idRec",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"rec",
+										":idRec"
+									],
+									"variable": [
+										{
+											"key": "idRec",
+											"value": "RN082535392025052840335R92PUX"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Recuperar o payload JSON que representa a configuração da recorrência",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{cashInbaseUrl}}/rec/:recUrlAccessToken",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"rec",
+										":recUrlAccessToken"
+									],
+									"variable": [
+										{
+											"key": "recUrlAccessToken",
+											"value": "RN082535392025052840335R92PUX"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Criar recorrência",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"vinculo\": {\n    \"contrato\": \"63100862\",\n    \"devedor\": {\n      \"cpf\": \"45164632481\",\n      \"nome\": \"Fulano de Tal\"\n    },\n    \"objeto\": \"Serviço de Streamming de Música.\"\n  },\n  \"calendario\": {\n    \"dataFinal\": \"2025-10-15\",\n    \"dataInicial\": \"2025-06-15\",\n    \"periodicidade\": \"MENSAL\"\n  },\n  \"valor\": {\n    \"valorRec\": \"1.99\"\n  },\n  \"politicaRetentativa\": \"NAO_PERMITE\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{cashInbaseUrl}}/rec",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"rec"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Revisar recorrência",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"loc\": 4671127,\n  \"vinculo\": {\n    \"devedor\": {\n      \"nome\": \"Fulano de Tal2\"\n    }\n  },\n  \"calendario\": {\n    \"dataInicial\": \"2025-05-29\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{cashInbaseUrl}}/rec/:idRec",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"rec",
+										":idRec"
+									],
+									"variable": [
+										{
+											"key": "idRec",
+											"value": "RN082535392025052840335R92PUX"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Gerenciamento de solicitações de recorrências",
+					"item": [
+						{
+							"name": "Criar solicitação de confirmação de recorrência",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"idRec\": \"RN123456782024011577825445612\",\n  \"calendario\": {\n    \"dataExpiracaoSolicitacao\": \"2023-12-20T12:17:11.926Z\"\n  },\n  \"destinatario\": {\n    \"agencia\": \"2569\",\n    \"conta\": \"550689\",\n    \"cpf\": \"15231470190\",\n    \"ispbParticipante\": \"91193552\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{cashInbaseUrl}}/solicrec",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"solicrec"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Consultar solicitação de confirmação de recorrência",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{cashInbaseUrl}}/solicrec/:idSolicRec",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"solicrec",
+										":idSolicRec"
+									],
+									"variable": [
+										{
+											"key": "idSolicRec",
+											"value": "SC082535392025052798896JKZ390"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Revisar solicitação de confirmação de recorrência",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"status\": \"CANCELADA\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{cashInbaseUrl}}/solicrec/:idSolicRec",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"solicrec",
+										":idSolicRec"
+									],
+									"variable": [
+										{
+											"key": "idSolicRec",
+											"value": "SC082535392025052798896JKZ390"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Gerenciamento de cobranças associadas a uma recorrência",
+					"item": [
+						{
+							"name": "Gerenciamento de notificações de cobranças recorrentes",
+							"item": [
+								{
+									"name": "Configurar Webhook",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"webhookUrl\": \"https://webhook.site/be27beb2-ebd7-4b4a-b701-719b900e5968\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{cashInbaseUrl}}/webhookcobr",
+											"host": [
+												"{{cashInbaseUrl}}"
+											],
+											"path": [
+												"webhookcobr"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Exibir informações acerca do Webhook",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{cashInbaseUrl}}/webhookcobr",
+											"host": [
+												"{{cashInbaseUrl}}"
+											],
+											"path": [
+												"webhookcobr"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cancelar o Webhook",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{cashInbaseUrl}}/webhookcobr",
+											"host": [
+												"{{cashInbaseUrl}}"
+											],
+											"path": [
+												"webhookcobr"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Criar cobrança recorrente",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"idRec\": \"RN082535392025052840335R92PUX\",\n  \"infoAdicional\": \"Serviços de Streamming de Música e Filmes.\",\n  \"calendario\": {\n    \"dataDeVencimento\": \"2025-06-01\"\n  },\n  \"valor\": {\n    \"original\": \"1.99\"\n  },\n  \"ajusteDiaUtil\": true,\n  \"devedor\": {\n    \"cep\": \"89256140\",\n    \"cidade\": \"Uberlândia\",\n    \"email\": \"sebastiao.tavares@mail.com\",\n    \"logradouro\": \"Alameda Franco 1056\",\n    \"uf\": \"MG\"\n  },\n  \"recebedor\": {\n    \"agencia\": \"9708\",\n    \"conta\": \"012682\",\n    \"tipoConta\": \"CORRENTE\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{cashInbaseUrl}}/cobr",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"cobr"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Criar cobrança recorrente informando txId",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"idRec\": \"RR1234567820240115abcdefghijk\",\n  \"infoAdicional\": \"Serviços de Streamming de Música e Filmes.\",\n  \"calendario\": {\n    \"dataDeVencimento\": \"2024-04-15\"\n  },\n  \"valor\": {\n    \"original\": \"106.07\"\n  },\n  \"ajusteDiaUtil\": true,\n  \"devedor\": {\n    \"cep\": \"89256-140\",\n    \"cidade\": \"Uberlândia\",\n    \"email\": \"sebastiao.tavares@mail.com\",\n    \"logradouro\": \"Alameda Franco 1056\",\n    \"uf\": \"MG\"\n  },\n  \"recebedor\": {\n    \"agencia\": \"9708\",\n    \"conta\": \"012682\",\n    \"tipoConta\": \"CORRENTE\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{cashInbaseUrl}}/cobr/:txId",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"cobr",
+										":txId"
+									],
+									"variable": [
+										{
+											"key": "txId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Revisar cobrança recorrente",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"status\": \"CANCELADA\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{cashInbaseUrl}}/cobr/:txId",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"cobr",
+										":txId"
+									],
+									"variable": [
+										{
+											"key": "txId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Solicitar retentativa de cobrança",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"status\": \"CANCELADA\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{cashInbaseUrl}}/cobr/:txId/retentativa/:data",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"cobr",
+										":txId",
+										"retentativa",
+										":data"
+									],
+									"variable": [
+										{
+											"key": "txId",
+											"value": ""
+										},
+										{
+											"key": "data",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Consultar cobrança recorrente",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"idRec\": \"RN082535392025052840335R92PUX\",\n  \"infoAdicional\": \"Serviços de Streamming de Música e Filmes.\",\n  \"calendario\": {\n    \"dataDeVencimento\": \"2025-06-01\"\n  },\n  \"valor\": {\n    \"original\": \"1.99\"\n  },\n  \"ajusteDiaUtil\": true,\n  \"devedor\": {\n    \"cep\": \"89256140\",\n    \"cidade\": \"Uberlândia\",\n    \"email\": \"sebastiao.tavares@mail.com\",\n    \"logradouro\": \"Alameda Franco 1056\",\n    \"uf\": \"MG\"\n  },\n  \"recebedor\": {\n    \"agencia\": \"9708\",\n    \"conta\": \"012682\",\n    \"tipoConta\": \"CORRENTE\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{cashInbaseUrl}}/cobr/:txId",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"cobr",
+										":txId"
+									],
+									"variable": [
+										{
+											"key": "txId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Consultar lista de cobranças recorrentes",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{cashInbaseUrl}}/cobr?inicio=2025-05-01T00:00:00Z&fim=2025-08-01T00:00:00Z",
+									"host": [
+										"{{cashInbaseUrl}}"
+									],
+									"path": [
+										"cobr"
+									],
+									"query": [
+										{
+											"key": "inicio",
+											"value": "2025-05-01T00:00:00Z"
+										},
+										{
+											"key": "fim",
+											"value": "2025-08-01T00:00:00Z"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonResponse = pm.response.json();",
+							"var bearerToken = jsonResponse.access_token;",
+							"pm.environment.set(\"qrCodeBearerToken\", bearerToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"client_id\": \"{{qrcode_client_id}}\",\n    \"client_secret\": \"{{qrcode_client_secret}}\",\n    \"grant_type\": \"client_credentials\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{cashInbaseUrl}}/oauth/token",
+					"host": [
+						"{{cashInbaseUrl}}"
+					],
+					"path": [
+						"oauth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "accessTokenUrl",
+				"value": "{{cashInbaseUrl}}/oauth/token",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "{{qrcode_client_secret}}",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "{{qrcode_client_id}}",
+				"type": "string"
+			},
+			{
+				"key": "scope",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "tokenType",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "accessToken",
+				"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJYVjYwbGRhZTFoR0FqdTB6aDc5VjZDQXIyRmZRYnZnMVFHcVphTkU2bFV3In0.eyJleHAiOjE2ODExNTEyMjIsImlhdCI6MTY4MTE1MDkyMiwianRpIjoiODE0OTAyOWMtZWU2NS00NDlhLThhMmYtZWJhZWM5YTFjY2ZhIiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5lY3MtcGl4LWhtZy5vbnouc29mdHdhcmUvcmVhbG1zL29ueiIsImF1ZCI6ImFwaS1xcmNvZGVzIiwic3ViIjoiNjMzOWYzYmQtYjkyYy00NTlhLTllMGEtZTYxYmM1NGU1Y2FkIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiMDAwMTExMDMzMzc3NjUzMzAwMDAxODgiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly8wMDAxMTEwMzMzNzc2NTMzMDAwMDE4ODozMDAwIl0sInJlc291cmNlX2FjY2VzcyI6eyJhcGktcXJjb2RlcyI6eyJyb2xlcyI6WyJ3ZWJob29rLndyaXRlIiwibG90ZWNvYnYud3JpdGUiLCJhbGxvdy5hbGwiLCJwaXgud3JpdGUiLCJwYXlsb2FkbG9jYXRpb24ud3JpdGUiLCJsb3RlY29idi5yZWFkIiwid2ViaG9vay5yZWFkIiwiY29iLnJlYWQiLCJwaXgucmVhZCIsImNvYnYucmVhZCIsInBheWxvYWRsb2NhdGlvbi5yZWFkIiwiY29idi53cml0ZSIsImNvYi53cml0ZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCBxcmNvZGVzIiwibGFzdE5hbWUiOiJST0RSSUdVRVMiLCJhZGRyU3RhdGUiOiJDRSIsImNsaWVudElkIjoiMDAwMTExMDMzMzc3NjUzMzAwMDAxODgiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImNsaWVudEhvc3QiOiIxMC4zMi42LjIzMiIsImZ1bGxOYW1lIjoiVklUT1IgWVZFTlMgUkVJUyBERSBPTElWRUlSQSBST0RSSUdVRVMiLCJhZGRyQWRkcmVzcyI6IlJ1YSBDb2VsaG8gTmV0byIsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC0wMDAxMTEwMzMzNzc2NTMzMDAwMDE4OCIsImFjY291bnROdW1iZXIiOiIxMTAzMyIsImNsaWVudEFkZHJlc3MiOiIxMC4zMi42LjIzMiIsImFkZHJDaXR5IjoiRm9ydGFsZXphIiwiYWNjb3VudElkIjoiMzUiLCJmaXJzdE5hbWUiOiJWSVRPUiIsImFkZHJOdW1iZXIiOiIxMTUzIiwicGhvbmUiOiI4NTk5ODkxNTcxOCIsImFkZHJDb21wbGVtZW50IjoiU2FsYSAzMDEiLCJuYW1lIjoiVklUT1IgWVZFTlMgUkVJUyBERSBPTElWRUlSQSBST0RSSUdVRVMiLCJwZXJzb25Eb2N1bWVudCI6IjM3NzY1MzMwMDAwMTg4IiwicGVyc29uVHlwZSI6IkxFR0FMX1BFUlNPTiIsImFkZHJaaXBDb2RlIjoiNjAzMzYyMTAiLCJhZGRyRGlzdHJpY3QiOiJBbHZhcm8gV2V5bmUiLCJlbWFpbCI6InZpdG9yeXZlbnNyZWlzZGVvbGl2ZWlyYUBnbWFpbC5jb20iLCJhY2NvdW50QnJhbmNoIjoiMDAwMSJ9.VnrN1AbilPeniCdjmswgsjUGfF9iaLwGq4MArxK1AIJ6OdS5uC2ppMtCq6SFJ2FHlaH3t90I8WBORpfhkbPQRuupcyu0hf5Ta2YL0hS7vv_InCAJlGMDkNIp6hRDJUbYrNx4_TpPjGoMLSOymqfkUoWv8lOOwiwNulyvUwvBHZ9rG64uWTUGOry2DUSzlVMmLJDmaZAOiag3hkNdOx97PkkXMncOhrqpfx4j4HUqEq89MN6qmVRW-NwchCO5L5SVMcybQexNtn46YIiNHqJlIXTPIxsv5imimPif0aYSH5iAYQpXtuBFGPJKRbH0UWiF_N52PbQqlB6l0SFpu0dLNw",
+				"type": "string"
+			},
+			{
+				"key": "tokenName",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "client_authentication",
+				"value": "body",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "client_credentials",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
