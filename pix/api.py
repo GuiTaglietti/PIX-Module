@@ -9,12 +9,133 @@ import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+
 class Pix:
     def __init__(self):
         self.api_keys = self._get_api_keys()
-        self.certificate = (self.api_keys['API_CRT_PATH'], self.api_keys['API_KEY_PATH'])
         self.domain = "https://v3.qrcodes.sulcredi.coop.br"
+        self.certificate = (self.api_keys['API_CRT_PATH'], self.api_keys['API_KEY_PATH'])
+        self.pix_key = self.api_keys['REC_PIX_KEY']
         self.bearer = self._auth()
+
+
+    def create_cob(self, value: str, txid: str = ""):
+        # TODO: txid handling
+        """
+        Create an immediate cob.
+
+        Args:
+            value (str): The value of the charge in BRL
+            pix_key (str): Receiver PIX key
+            txid: (str, optional): Transaction ID, default is PSP defined
+        Returns:
+            String request response 
+        """
+        if self._value_is_not_valid(value):
+            # TODO: better error handling
+            exit(1)
+        
+        url = f"{self.domain}/cob"
+
+        headers = { 
+            "Authorization": f"Bearer {self.bearer}",
+            "Content-Type": "application/json"
+       }
+
+        data = {
+            "calendario": {
+                "expiracao": 600
+            },
+            #"devedor": {
+                #"cpf": "12345678909",
+                #"nome": "Francisco da Silva"
+            #},
+            "valor": {
+                "original": f"{value}"
+                #"modalidadeAlteracao": 0
+            },
+            "chave": f"{self.pix_key}",
+            #"solicitacaoPagador": "Serviço realizado."
+        }
+
+        # TODO: "verify=False" is not recommended in production but doesnt work without it
+        #    see @link(https://gist.github.com/erikbern/756b1d8df2d1487497d29b90e81f8068)
+        response =  requests.post(url, headers=headers, json=data, cert=self.certificate, verify=False)
+        # TODO: write better logs
+        fmt_response = json.dumps(response.json(), indent=4, ensure_ascii=False)
+        self._save_to_file(filename="create_cob", response=fmt_response)
+
+        # TODO: abstract return values
+        return str(response.text)
+
+
+    def list_cobs(self, inicio: str, fim :str) -> str:
+        """
+        List cobs between 'inicio' and 'fim'
+
+        Args:
+            inicio (str): yyyy-mm-dd-hh-mm-ss format timestamp of when to start looking for cobs
+            fim (str): yyyy-mm-dd-hh-mm-ss format timestamp of when to stop looking for cobs
+        Return value:
+            Formatted JSON string of the request response
+        """
+        if not (self._date_format_is_valid(inicio) and self._date_format_is_valid(fim)):
+            print("Date format should be yyyy-mm-dd-hh-mm-ss")
+            # TODO: better error handling
+            exit(1)
+
+        url = f"{self.domain}/cob/"
+
+        headers = { 
+            "Authorization": f"Bearer {self.bearer}",
+            "Content-Type": "application/json"
+        }
+
+        payload = {
+                "inicio": self._to_rfc3339(inicio),
+                "fim": self._to_rfc3339(fim)
+        }
+
+        # TODO: "verify=False" is not recommended in production but doesnt work without it
+        #    see @link(https://gist.github.com/erikbern/756b1d8df2d1487497d29b90e81f8068)
+        response =  requests.get(url, headers=headers, params=payload, cert=self.certificate, verify=False)
+        fmt_response = json.dumps(response.json(), indent=4, ensure_ascii=False)
+        # TODO: write better logs
+        self._save_to_file(filename="list_cobs", response=fmt_response)
+
+        # TODO: abstract return values
+        return str(response.text)
+
+
+    def detail_cob(self, txid: str) -> str:
+        # TODO: return value must be abstracted
+        """
+        Detail a specific charge with the specified {txid}
+
+        Args:
+            txid (str): Transaction ID
+        Return value:
+            Formatted json string of the HTTP response
+        """
+        if not self._txid_format_is_valid(txid):
+            # TODO: better error handling
+            exit(1)
+
+        url = f"{self.domain}/cob/{txid}"
+
+        headers = { 
+            "Authorization": f"Bearer {self.bearer}",
+            "Content-Type": "application/json"
+        }
+
+        # TODO: "verify=False" is not recommended in production but doesnt work without it
+        #    see @link(https://gist.github.com/erikbern/756b1d8df2d1487497d29b90e81f8068)
+        response = requests.get(url, headers=headers, cert=self.certificate, verify=False)
+        fmt_response = json.dumps(response.json(), indent=4, ensure_ascii=False)
+        # TODO: write better logs
+        self._save_to_file(filename=f"detail-cob-{txid}", response=fmt_response)
+
+        return str(response.text)
 
 
     def _get_api_keys(self) -> dict:
@@ -27,8 +148,10 @@ class Pix:
         api_keys = {
                 'API_CLIENT_ID': os.getenv("MODOBANK_CLIENT_ID"),
                 'API_CLIENT_SECRET': os.getenv("MODOBANK_CLIENT_SECRET"),
+                'API_PFX_PATH': os.getenv("MODOBANK_PFX_PATH"),
                 'API_CRT_PATH': os.getenv("MODOBANK_CRT_PATH"),
-                'API_KEY_PATH': os.getenv("MODOBANK_KEY_PATH")
+                'API_KEY_PATH': os.getenv("MODOBANK_KEY_PATH"),
+                'REC_PIX_KEY': os.getenv("MODOBANK_PIX_KEY")
                 }
 
         ok = True
@@ -67,7 +190,7 @@ class Pix:
 
         #self._save_to_file(filename="auth", response=response.text)
         # TODO: better return values instead of just returning the Bearer
-        return response.text
+        return response.json()['access_token']
 
 
     def _value_is_not_valid(self, value: str) -> bool:
@@ -90,6 +213,7 @@ class Pix:
             return False
     
 
+
     def _txid_format_is_valid(self, txid: str):
         # TODO: check if in Modobank API is the same pattern
         """
@@ -102,6 +226,26 @@ class Pix:
         """
         pattern = r"^[a-zA-Z0-9]{26,35}$"
         return bool(re.match(pattern, txid))
+
+
+    def _date_format_is_valid(self, date_string):
+        """
+        Check if date string is in yyyy-mm-dd-hh-mm-ss format
+        
+        Args:
+            date_string (str): Date string to validate
+        Returns:
+            bool: True if valid format, False otherwise
+        """
+        pattern = r'^\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}$'
+        if not re.match(pattern, date_string):
+            return False
+        
+        try:
+            datetime.strptime(date_string, '%Y-%m-%d-%H-%M-%S')
+            return True
+        except ValueError:
+            return False
 
 
     def _to_rfc3339(self, date_string):
@@ -127,125 +271,6 @@ class Pix:
             filename (str): Name of the file to be saved
             response (str): JSON response
         """ 
-        # TODO: this is ugly
         date = str(datetime.now()).replace(" ","-").replace(":","-")[:19]
-        with open(f"log/requests/{filename}-{date}.json", "w") as f:
+        with open(f"logs/{date}-{filename}.json", "w") as f:
             f.write(response)
-
-
-    def create_cob(self, value: str, pix_key: str, txid: str = ""):
-        # TODO: txid handling
-        """
-        Create an immediate cob.
-
-        Args:
-            value (str): The value of the charge in BRL
-            pix_key (str): Receiver PIX key
-            txid: (str, optional): Transaction ID, default is PSP defined
-        Returns:
-            String request response 
-        """
-        if self._value_is_not_valid(value):
-            # TODO: better error handling
-            exit(1)
-        
-        # maybe this should not have "/api/"
-        url = f"{self.domain}/api/v2/cob"
-
-        # maybe Content-Type should be "application/json"
-        headers = { 
-            "Authorization": f"Bearer {self.bearer}",
-            "Content-Type": "application/x-www-form-urlencoded" 
-       }
-
-        payload = {
-            "calendario": {
-                "expiracao": 600
-            },
-            #"devedor": {
-                #"cpf": "12345678909",
-                #"nome": "Francisco da Silva"
-            #},
-            "valor": 
-            {
-                "original": value
-                #"modalidadeAlteracao": 0
-            },
-            "chave": pix_key,
-            "solicitacaoPagador": "Serviço realizado."
-        }
-
-        # maybe cert is not needed idk
-        response =  requests.post(url, headers=headers, json=payload, cert=self.certificate)
-        fmt_response = json.dumps(response, indent=4, ensure_ascii=False)
-        # TODO: write better logs
-        #self._save_to_file(filename="create_cob", response=fmt_response)
-
-        # TODO: better return values
-        return str(fmt_response)
-
-
-    def list_cobs(self, inicio: str, fim :str) -> str:
-        """
-        List cobs between 'inicio' and 'fim'
-
-        Args:
-            inicio (str): yyyy-mm-dd-hh-mm-ss format timestamp of when to start looking for cobs
-            fim (str): yyyy-mm-dd-hh-mm-ss format timestamp of when to stop looking for cobs
-        Return value:
-            Formatted JSON string of the request response
-        """
-        # maybe "/api" is not needed
-        url = f"{self.domain}/api/v2/cob/"
-
-        # maybe Content-Type is "application/x-www-form-urlencoded"
-        headers = { 
-            "Authorization": f"Bearer {self.bearer}",
-            "Content-Type": "application/json"
-        }
-
-        payload = {
-                "inicio": self._to_rfc3339(inicio),
-                "fim": self._to_rfc3339(fim)
-        }
-
-        # maybe certificate is not needed idk
-        response =  requests.get(url, headers=headers, params=payload, cert=self.certificate)
-        fmt_response = json.dumps(response.json(), indent=4, ensure_ascii=False, sort_keys=False)
-        # TODO: write better logs
-        #self._save_to_file(filename="list_cobs", response=fmt_response)
-
-        # TODO: return better values
-        return str(fmt_response)
-
-
-    def detail_cob(self, txid: str) -> str:
-        # TODO: return value must be abstracted
-        """
-        Detail a specific charge with the specified {txid}
-
-        Args:
-            txid (str): Transaction ID
-        Return value:
-            Formatted json string of the HTTP response
-        """
-        if not self._txid_format_is_valid(txid):
-            # TODO: better error handling
-            exit(1)
-
-        # maybe "/api/" is not needed
-        url = f"{self.domain}/api/v2/cob/{txid}"
-
-        headers = { 
-            "Authorization": f"Bearer {self.bearer}",
-            "Content-Type": "application/json"
-        }
-
-        # maybe certificate is not needed
-        response = requests.get(url, headers=headers, cert=self.certificate)
-        fmt_response = json.dumps(response.json(), indent=4, ensure_ascii=False, sort_keys=False)
-        # TODO: write better logs
-        #self._save_to_file(filename=f"detail-cob-{txid}", response=fmt_response)
-
-        return str(fmt_response)
-

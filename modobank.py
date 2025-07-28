@@ -47,7 +47,7 @@ def main():
         print(response)
         return
     else:
-        response = pix.create_cob(args.amount, pix_key="03109929074")
+        response = pix.create_cob(args.amount)
         print(response)
         return
     
