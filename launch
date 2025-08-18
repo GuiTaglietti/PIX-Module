@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+function log() {
+    color=$1
+    message=$2
+
+    case $color in
+        green) echo "$(tput setaf 120)$(tput bold)--> $message$(tput sgr0)" && sleep 0.5;;
+        red) echo "$(tput setaf 196)$(tput bold)--> $message$(tput sgr0)" && sleep 0.5;;
+        *) return ;;
+    esac
+}
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VENV_BIN="$SCRIPT_DIR/.venv/bin"
+
+if [[ ! -f $SCRIPT_DIR/.venv/bin/activate ]];then
+    log 'red' "virtual environment not detected"
+    python3 -m venv $SCRIPT_DIR/.venv
+    log 'green' "virtual environment created at '$SCRIPT_DIR/.venv/'"
+    source $VENV_BIN/activate
+    pip install -r $SCRIPT_DIR/requirements.txt
+    log 'green' "requirements installed"
+    log 'green' "starting application"
+    exec uvicorn app.main:app --reload --port 8000
+else
+    log 'green' "virtual environment detected"
+    case "$PATH:" in
+        "$VENV_BIN:"*)
+            log 'green' "'.venv/bin/activate' is in PATH"
+            if pip install --dry-run -r $SCRIPT_DIR/requirements.txt >/dev/null 2>&1;then
+                log 'green' "requirements installed"
+                log 'green' "starting application"
+                exec uvicorn app.main:app --reload --port 8000
+            else
+                pip install -r $SCRIPT_DIR/requirements.txt
+                log 'green' "requirements installed"
+                log 'green' "starting application"
+                exec uvicorn app.main:app --reload --port 8000
+            fi
+            ;;
+        *)
+            log 'red' "'.venv/bin/activate' is not in PATH, consider running 'source .venv/bin/activate'"
+            source $VENV_BIN/activate
+            if pip install --dry-run -r $SCRIPT_DIR/requirements.txt >/dev/null 2>&1;then
+                log 'green' "requirements installed"
+                log 'green' "starting application"
+                exec uvicorn app.main:app --reload --port 8000
+            else
+                pip install -r $SCRIPT_DIR/requirements.txt
+                log 'green' "requirements installed"
+                log 'green' "starting application"
+                exec uvicorn app.main:app --reload --port 8000
+            fi
+            ;;
+        esac
+fi
