@@ -52,7 +52,7 @@ class Modobank:
             return True
         return datetime.now() >= self._bearer_expires_at
     
-    def create_cob(self, value: str, cpf: CPF, name: str,txid: str = "") -> dict: # TODO: this is not authenticating
+    def create_cob(self, value: str, cpf: CPF, name: str,txid: str = "") -> dict:
         if self._value_is_not_valid(value):
             raise PixError("Invalid value format. Expected: '^[0-9]{1,10}\\.[0-9]{2}$'")
 

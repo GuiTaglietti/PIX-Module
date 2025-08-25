@@ -1,7 +1,0 @@
-#!/bin/sh
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-rg --glob '!TODO' "TODO" $SCRIPT_DIR
-rg --glob '!TODO' "NOTE" $SCRIPT_DIR
-
