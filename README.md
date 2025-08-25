@@ -30,32 +30,31 @@ uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ├── app/
 │   ├── api/
 │   │   └── v1/
-│   │       └── router.py         # endpoint de criação e status de pagamento, webhook, usuários
+│   │       └── router.py           # endpoint de criação e status de pagamento, webhook, usuários
 │   ├── models/
-│   │   └── schemas.py            # definição dos dados envolvidos nas requests
+│   │   └── schemas.py              # definição dos dados envolvidos nas requests
 │   ├── services/
 │   │   └── pix/
-│   │       ├── modobank.py       # chamada Modobank API 
-│   │       └── efipay.py         # chamada Efipay API (para testes)
+│   │       ├── modobank.py         # chamada Modobank API 
+│   │       └── efipay.py           # chamada Efipay API (para testes)
 │   ├── store/
-│   │   ├── db.py                 # funções de query e conexão à base de dados
-│   │   └── repository.py         # modelagem do banco de dados
+│   │   ├── db.py                   # funções de query e conexão à base de dados
+│   │   └── repository.py           # modelagem do banco de dados
 │   ├── web/
 │   │   └── templates/            
-│   │       └── index.html        # página web root "/"
-│   ├── main.py                   # ponto de entrada da aplicação
-│   ├── config.py                 # credenciais atuais 'cp config_modobank.py config.py'
-│   ├── config_modobank.py        # credenciais Modobank e banco de dados
-│   ├── config_efipay.py          # credenciais Efipay e banco de dados
-│   └── container.py              # banco de dados, psp, templates
-├── scripts/
-│   ├── create_user               # curl script para testar criação de usuários
-│   └── create_cob                # curl script para testar criação de pagamentos
-├── launch                        # script pra inicializar o server
-├── TODO                          # ripgrep p/ mostrar TODOs e NOTEs pelo código
-├── requirements.txt              # dependências
-├── LICENSE                       # licença
-└── README.md                     # instruções
+│   │       └── index.html          # página web root "/"
+│   ├── main.py                     # ponto de entrada da aplicação
+│   ├── config.py                   # credenciais atuais 'cp config_modobank.py config.py'
+│   └── container.py                # banco de dados, psp, templates
+├── tests/
+│   │   └── config/
+│   │       └── config_modobank.py  # credenciais Modobank e banco de dados
+│   │       └── config_efipay.py    # credenciais Efipay e banco de dados
+│   ├── api_create_user             # curl script para testar criação de usuários
+│   └── api_create_cob              # curl script para testar criação de pagamentos
+├── launch                          # script pra inicializar o server
+├── todo                            # ripgrep p/ mostrar TODOs e NOTEs pelo código
+├── requirements.txt                # dependências
+├── LICENSE                         # licença
+└── README.md                       # instruções
 ```
-
-
