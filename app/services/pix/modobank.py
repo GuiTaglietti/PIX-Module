@@ -22,7 +22,6 @@ class Modobank:
         self.api_keys = {
             "API_CLIENT_ID": settings.psp_client_id,
             "API_CLIENT_SECRET": settings.psp_client_secret,
-            "API_PFX_PATH": settings.psp_pfx_path,
             "API_CRT_PATH": settings.psp_crt_path,
             "API_KEY_PATH": settings.psp_key_path,
             "REC_PIX_KEY": settings.psp_pix_key,
@@ -57,7 +56,7 @@ class Modobank:
         if self._value_is_not_valid(value):
             raise PixError("Invalid value format. Expected: '^[0-9]{1,10}\\.[0-9]{2}$'")
 
-        url = f"{self.domain}/v2/cob"
+        url = f"{self.domain}/cob"
         headers = { 
             "Authorization": f"Bearer {self.bearer}",
             "Content-Type": "application/json"
@@ -76,7 +75,7 @@ class Modobank:
             "chave": self.pix_key
         }
         try:
-            response = requests.post(url, headers=headers, json=data, cert=self.certificate)
+            response = requests.post(url, headers=headers, json=data, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
@@ -102,7 +101,8 @@ class Modobank:
         except requests.exceptions.RequestException as e:
             raise PixError(f"Failed to list PIX payments: {str(e)}")
 
-    def detail_cob(self, txid: str) -> dict: # NOTE: not tested after refactor
+    # NOTE: not tested after refactor
+    def detail_cob(self, txid: str) -> dict:
         if not self._txid_format_is_valid(txid):
             raise PixError("Invalid txid format")
 
@@ -112,13 +112,13 @@ class Modobank:
             "Content-Type": "application/json"
         }
         try:
-            response = requests.get(url, headers=headers, cert=self.certificate, verify=False, timeout=30)
+            response = requests.get(url, headers=headers, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             raise PixError(f"Failed to get PIX payment details: {str(e)}")
 
-    def _auth(self) -> str: # TODO: not authenticating
+    def _auth(self) -> str: # FIXME: returning certificate error
         url = f"{self.domain}/oauth/token"
         data = {
             'client_id': self.api_keys['API_CLIENT_ID'],
@@ -128,7 +128,8 @@ class Modobank:
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         
         try:
-            response = requests.post(url, data=data, headers=headers, cert=self.certificate, verify=False, timeout=30)
+            response = requests.post(url, data=data, headers=headers, cert=self.certificate, verify=False)
+            print(response.text)
             response.raise_for_status()
             return response.json()['access_token']
         except requests.exceptions.RequestException as e:

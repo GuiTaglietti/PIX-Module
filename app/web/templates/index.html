@@ -80,7 +80,7 @@
                 
                 const data = await r.json();
 
-                $('#result').textContent = `txid=${data.txid}, tatus=${data.status}, amount=${data.amount}`;
+                $('#result').textContent = `txid=${data.txid}, status=${data.status}, amount=${data.amount}`;
 
                 if (data.status !== 'CONCLUDED')
                     setTimeout(() => poll(txid), 1500);

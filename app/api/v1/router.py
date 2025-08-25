@@ -60,7 +60,7 @@ def create_cob(req: CreatePaymentRequest, repo: Repository = Depends(get_repo), 
     except PixError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Failed to create payment")
+        raise HTTPException(status_code=500, detail=f"Failed to create payment: {str(e)}")
 
 @router.get("/payments/pix/{txid}", response_model=PaymentResponse)
 def get_payment(txid: str, repo: Repository = Depends(get_repo)) -> PaymentResponse:
@@ -76,9 +76,10 @@ def get_payment(txid: str, repo: Repository = Depends(get_repo)) -> PaymentRespo
         pixCopiaECola=payment.pixCopiaECola,
     )
 
+# NOTE: this was not tested after refactor
 @router.post("/payments/pix/{txid}/check", response_model=PaymentResponse)
+#def check_payment_status(txid: str, repo: Repository = Depends(get_repo), psp: Efipay = Depends(get_psp)) -> PaymentResponse:
 def check_payment_status(txid: str, repo: Repository = Depends(get_repo), psp: Modobank = Depends(get_psp)) -> PaymentResponse:
-#def check_payment_status(txid: str, repo: Repository = Depends(get_repo), psp: Efipay = Depends(get_psp)) -> PaymentResponse: # NOTE: this was not tested after refactor
     try:
         payment = repo.get_payment(txid)
         if not payment:
@@ -114,9 +115,10 @@ def check_payment_status(txid: str, repo: Repository = Depends(get_repo), psp: M
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to check payment status")
 
+# NOTE: this was not tested after refactor
 @router.get("/payments/pix")
-def list_payments(inicio: str, fim: str, psp: Modobank = Depends(get_psp)) -> dict: # NOTE: this was not tested after refactor
 #def list_payments(inicio: str, fim: str, psp: Efipay = Depends(get_psp)) -> dict:
+def list_payments(inicio: str, fim: str, psp: Modobank = Depends(get_psp)) -> dict:
     try:
         return psp.list_cobs(inicio, fim)
     except PixError as e:
@@ -124,7 +126,8 @@ def list_payments(inicio: str, fim: str, psp: Modobank = Depends(get_psp)) -> di
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to list payments")
 
-@router.post("/webhooks/pix") # NOTE: this was not tested after refactor
+# NOTE: this was not tested after refactor
+@router.post("/webhooks/pix")
 def pix_webhook(webhook: WebhookPix, repo: Repository = Depends(get_repo)):
     try:
         payment = repo.set_status(webhook.txid, webhook.status)

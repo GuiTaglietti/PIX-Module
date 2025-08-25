@@ -5,15 +5,16 @@ from dotenv import load_dotenv
 from dataclasses import dataclass
 from typing import Optional
 
-load_dotenv() # TODO: i think is better to load it without using a library
+load_dotenv() # NOTE: i think is better to load it without using a library
 
 @dataclass
-class Settings: # TODO: is it safe to leave the keys in this class??
+class Settings: # NOTE: is it safe to leave the keys in this class??
     app_name: str = "Vaquinha"
     debug: bool = os.getenv("DEBUG", "0") == "1"
     database_url: Optional[str] = os.getenv("DATABASE_URL")
     psp_client_id: Optional[str] = os.getenv("MODOBANK_CLIENT_ID")
     psp_client_secret: Optional[str] = os.getenv("MODOBANK_CLIENT_SECRET")
+    # NOTE: we only use the .crt and .key but .pfx is here in case we want it to be
     psp_pfx_path: Optional[str] = os.getenv("MODOBANK_PFX_PATH")
     psp_crt_path: Optional[str] = os.getenv("MODOBANK_CRT_PATH")
     psp_key_path: Optional[str] = os.getenv("MODOBANK_KEY_PATH")
@@ -28,7 +29,6 @@ class Settings: # TODO: is it safe to leave the keys in this class??
             ("MODOBANK_PIX_KEY", self.psp_pix_key),
         ]
         cert_vars = [
-            ("MODOBANK_PFX_PATH", self.psp_pfx_path),
             ("MODOBANK_CRT_PATH", self.psp_crt_path),
             ("MODOBANK_KEY_PATH", self.psp_key_path),
         ]
