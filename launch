@@ -23,7 +23,7 @@ function start_application()
 function create_virtual_environment()
 {
     if python3 -m venv $SCRIPT_DIR/.venv; then 
-      echo log "green" "virtual environment created at '$SCRIPT_DIR/.venv/'"
+      log "green" "virtual environment created at '$SCRIPT_DIR/.venv/'"
     else 
       log "red" "could not create virtual environment" && exit 1 
     fi
