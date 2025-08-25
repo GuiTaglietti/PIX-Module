@@ -40,16 +40,8 @@ function install_requirements()
     fi
 }
 
-function requirements_are_installed()
-{
-    while IFS= read -r package; do
-        [[ -z "$package" || "$package" =~ ^# ]] && continue
-
-        if ! pip show "$package" >/dev/null 2>&1; then
-            return 1
-        fi
-    done < "$SCRIPT_DIR/requirements.txt"
-    return 0 
+function requirements_are_installed() {
+    pip install --dry-run -r "$SCRIPT_DIR/requirements.txt" >/dev/null 2>&1
 }
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -59,7 +51,7 @@ VENV_BIN="$SCRIPT_DIR/.venv/bin"
 VENV_IS_IN_PATH=$VENV_BIN
 
 if [[ ! -f $VENV_EXISTS ]];then
-    log "red" "virtual environment not detecting, creating virtual environment..."
+    log "red" "virtual environment not detected, creating virtual environment..."
     create_virtual_environment
     install_requirements
     start_application
