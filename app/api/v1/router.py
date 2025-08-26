@@ -23,14 +23,14 @@ def create_user(req: CreateUserRequest, repo: Repository = Depends(get_repo)) ->
     return UserResponse(cpf=user.cpf, email=user.email, name=user.name)
 
 @router.post("/payments/pix", response_model=PaymentResponse)
-def create_cob(req: CreatePaymentRequest, repo: Repository = Depends(get_repo), psp: Modobank = Depends(get_psp)) -> PaymentResponse:
+def create_payment(req: CreatePaymentRequest, repo: Repository = Depends(get_repo), psp: Modobank = Depends(get_psp)) -> PaymentResponse:
 #def create_cob(req: CreatePaymentRequest, repo: Repository = Depends(get_repo), psp: Efipay = Depends(get_psp)) -> PaymentResponse:
     if req.amount <= 0:
         raise HTTPException(status_code=422, detail="amount must be positive")
     try:
         amount_str = f"{req.amount:.2f}"
 
-        response = psp.create_cob(value=amount_str, cpf=req.cpf, name=req.name)
+        response = psp.create_immediate(value=amount_str, cpf=req.cpf, name=req.name)
         txid = response.get("txid")
         pixCopiaECola = response.get("pixCopiaECola")
         
@@ -85,7 +85,7 @@ def check_payment_status(txid: str, repo: Repository = Depends(get_repo), psp: M
         if not payment:
             raise HTTPException(status_code=404, detail="Payment not found")
         
-        response = psp.detail_cob(txid)
+        response = psp.detail_immediate(txid)
         status = response.get("status", "").upper()
         
         if status in ["CONCLUIDA"]:
@@ -120,15 +120,15 @@ def check_payment_status(txid: str, repo: Repository = Depends(get_repo), psp: M
 #def list_payments(inicio: str, fim: str, psp: Efipay = Depends(get_psp)) -> dict:
 def list_payments(inicio: str, fim: str, psp: Modobank = Depends(get_psp)) -> dict:
     try:
-        return psp.list_cobs(inicio, fim)
+        return psp.list_immediate(inicio, fim)
     except PixError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to list payments")
 
-# NOTE: this was not tested after refactor
+# NOTE: i dont even know if it works
 @router.post("/webhooks/pix")
-def pix_webhook(webhook: WebhookPix, repo: Repository = Depends(get_repo)):
+def immediate_webhook(webhook: WebhookPix, repo: Repository = Depends(get_repo)):
     try:
         payment = repo.set_status(webhook.txid, webhook.status)
         if not payment:

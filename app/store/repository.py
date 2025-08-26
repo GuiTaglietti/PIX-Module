@@ -27,13 +27,13 @@ SCHEMA = [
 
 @dataclass
 class User:
+    cpf: CPF
+    email: EmailStr
+    name: str
     # password
     # agency: Optional[str] = None
     # account: Optional[str] = None
     # ispb: Optional[str] = None
-    cpf: CPF
-    email: EmailStr
-    name: str
 
 @dataclass
 class Payment:
