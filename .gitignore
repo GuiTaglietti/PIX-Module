@@ -143,8 +143,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-scripts/
-Certificados/
 tags
 
 # Spyder project settings
