@@ -10,5 +10,7 @@ credentials = {
 }
 
 modobank = Modobank(credentials)
-response = modobank.create_immediate_charge(amount="1.00", cpf="44401970004", name="Foobar da Silva")
+
+response = modobank.create_webhook(txid="b6189c0ef24eeaa30831e566b1bdd3")
+
 print(response)

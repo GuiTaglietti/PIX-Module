@@ -44,11 +44,11 @@ class Modobank:
     @property
     def bearer(self) -> str:
         """ 
-        @property method -> self.bearer
+        @property method -> self._bearer
         """
         if not self._bearer or self._is_token_expired():
             self._bearer = self._auth()
-            self._bearer_expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
+            self._bearer_expires_at = datetime.now(timezone.utc) + timedelta(seconds=300)
         return self._bearer
 
 
@@ -75,10 +75,12 @@ class Modobank:
         # TODO: check if txid is "" in case the programmer wants to create an immediate with an specific txid
 
         url = f"{self.domain}/cob"
+
         headers = { 
             "Authorization": f"Bearer {self.bearer}",
             "Content-Type": "application/json"
         }
+
         data = {
             "calendario": {
                 "expiracao": expiration
@@ -92,6 +94,7 @@ class Modobank:
                 },
             "chave": self.pix_key
         }
+
         try:
             # NOTE: read online this 'verify=False' is risky but it doesn't work without it
             response = requests.post(url, headers=headers, json=data, cert=self.certificate, verify=False)
@@ -101,7 +104,7 @@ class Modobank:
             raise ChargeError(404)
 
 
-    def list_immediate(self, inicio: str, fim: str) -> dict:
+    def list_immediate_charge(self, inicio: str, fim: str) -> dict:
         """ 
         List immediate charges between 'inicio' and 'fim'
 
@@ -115,10 +118,12 @@ class Modobank:
             raise DateError(404)
 
         url = f"{self.domain}/cob/"
+
         headers = { 
             "Authorization": f"Bearer {self.bearer}",
             "Content-Type": "application/json"
         }
+
         payload = {
             "inicio": self._to_rfc3339(inicio),
             "fim": self._to_rfc3339(fim)
@@ -133,7 +138,7 @@ class Modobank:
 
 
     # NOTE: not tested after refactor
-    def detail_immediate(self, txid: str) -> str: # TODO: better typing
+    def detail_immediate_charge(self, txid: str) -> str: # TODO: better typing
         """ 
         Details about an immediate charge associated with the txid provided
 
@@ -144,6 +149,7 @@ class Modobank:
             raise TxidError(404)
 
         url = f"{self.domain}/cob/{txid}"
+
         headers = { 
             "Authorization": f"Bearer {self.bearer}",
             "Content-Type": "application/json"
@@ -157,6 +163,35 @@ class Modobank:
             raise ChargeError(404)
 
 
+    def create_webhook(self, txid:str):
+        # TODO: `create_webhook()` doc
+        """
+        Create a webhook for the payment associated with the txid provided.
+
+        Parameters:
+            txid (str): Transaction ID to monitor
+        Returns:
+        """
+        if not self._txid_format_is_valid(txid):
+            raise TxidError(404)
+
+        url = f"{self.domain}/webhook/{txid}"
+
+        headers = { 
+            "Authorization": f"Bearer {self.bearer}",
+            "Content-Type": "application/json"
+        }
+
+        try:
+            # NOTE: read online this 'verify=False' is risky but it doesn't work without it
+            response = requests.put(url, headers=headers, cert=self.certificate, verify=False)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            raise ChargeError(404)
+
+
+
     def _auth(self) -> str:
         """ 
         Modobank API OAuth authentication request
@@ -165,16 +200,18 @@ class Modobank:
             (str): Bearer access token
         """
         url = f"{self.domain}/oauth/token"
+
         data = {
             'client_id': self.api_keys['API_CLIENT_ID'],
             'client_secret': self.api_keys['API_CLIENT_SECRET'],
             'grant_type': 'client_credentials'
         }
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+
+        headers = {'Content-Type': 'application/json'}
         
         try:
             # NOTE: read online this 'verify=False' is risky but it doesn't work without it
-            response = requests.post(url, data=data, headers=headers, cert=self.certificate, verify=False)
+            response = requests.post(url, json=data, headers=headers, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()['access_token']
         except requests.exceptions.RequestException as e:

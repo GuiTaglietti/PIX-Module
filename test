@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# Run a test
+
+usage() { 
+    echo "usage: $0 OPTIONS"; 
+    echo ""
+    echo "OPTIONS:"
+    echo "    charge     create an immediate charge"
+    echo "    webhook    create a webhook"
+    echo ""
+    exit 1; 
+}
+
+if [ $# -eq 0 ]; then
+    exec python -m "tests.create_charge"
+else
+    case "$1" in
+        charge) exec python -m "tests.create_charge" ;;
+        webhook) exec python -m "tests.create_webhook" ;;
+        *) usage ;;
+    esac
+fi
