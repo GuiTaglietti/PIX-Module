@@ -11,7 +11,8 @@ from .exceptions import (
     AmountError,
     TxidError,
     ChargeError,
-    DateError
+    DateError,
+    WebhookError
 )
 
 __version__ = "1.0.0"

@@ -14,7 +14,8 @@ from .exceptions import (
     AmountError,
     TxidError,
     ChargeError,
-    DateError
+    DateError,
+    WebhookError
 )
 
 
@@ -69,7 +70,8 @@ class Modobank:
         Returns:
             (dict): the actual response of the Modobank API
         """
-        if not self._amount_format_is_valid(amount):
+        if not self._amount_format_is_valid(amount):            
+            # TODO: better exception handling
             raise AmountError(404)
 
         # TODO: check if txid is "" in case the programmer wants to create an immediate with an specific txid
@@ -100,7 +102,8 @@ class Modobank:
             response = requests.post(url, headers=headers, json=data, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()
-        except requests.exceptions.RequestException as e:
+        except requests.exceptions.RequestException as e:           
+            # TODO: better exception handling
             raise ChargeError(404)
 
 
@@ -114,7 +117,8 @@ class Modobank:
         Returns:
             (dict): the actual response of the Modobank API
         """
-        if not (self._date_format_is_valid(inicio) and self._date_format_is_valid(fim)):
+        if not (self._date_format_is_valid(inicio) and self._date_format_is_valid(fim)):     
+            # TODO: better exception handling
             raise DateError(404)
 
         url = f"{self.domain}/cob/"
@@ -133,7 +137,8 @@ class Modobank:
             response = requests.get(url, headers=headers, params=payload, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()
-        except requests.exceptions.RequestException as e:
+        except requests.exceptions.RequestException as e:           
+            # TODO: better exception handling
             raise ChargeError(404)
 
 
@@ -145,7 +150,8 @@ class Modobank:
         Returns:
             (dict): the actual response of the Modobank API
         """
-        if not self._txid_format_is_valid(txid):
+        if not self._txid_format_is_valid(txid):            
+            # TODO: better exception handling
             raise TxidError(404)
 
         url = f"{self.domain}/cob/{txid}"
@@ -154,12 +160,17 @@ class Modobank:
             "Authorization": f"Bearer {self.bearer}",
             "Content-Type": "application/json"
         }
+
+        data = {
+                "webhookUrl": "https://"
+        }
         try:
             # NOTE: read online this 'verify=False' is risky but it doesn't work without it
             response = requests.get(url, headers=headers, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()
-        except requests.exceptions.RequestException as e:
+        except requests.exceptions.RequestException as e:           
+            # TODO: better exception handling
             raise ChargeError(404)
 
 
@@ -172,7 +183,8 @@ class Modobank:
             txid (str): Transaction ID to monitor
         Returns:
         """
-        if not self._txid_format_is_valid(txid):
+        if not self._txid_format_is_valid(txid):            
+            # TODO: better exception handling
             raise TxidError(404)
 
         url = f"{self.domain}/webhook/{txid}"
@@ -182,13 +194,22 @@ class Modobank:
             "Content-Type": "application/json"
         }
 
+        # FIXME: i didn't understand the request data
+        #
+        #   [doc](https://developers.onz.software/reference/qrcodes/#tag/Webhook/paths/~1webhook~1%7Bchave%7D/put)
+        #
+        data = {
+            "webhookUrl": "TODO!!"
+        }
+
         try:
             # NOTE: read online this 'verify=False' is risky but it doesn't work without it
             response = requests.put(url, headers=headers, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()
-        except requests.exceptions.RequestException as e:
-            raise ChargeError(404)
+        except requests.exceptions.RequestException as e:            
+            # TODO: better exception handling
+            raise WebhookError(404)
 
 
 
@@ -214,7 +235,8 @@ class Modobank:
             response = requests.post(url, json=data, headers=headers, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()['access_token']
-        except requests.exceptions.RequestException as e:
+        except requests.exceptions.RequestException as e:             
+            # TODO: better exception handling
             raise AuthenticationError(404)
 
     def _is_token_expired(self) -> bool:

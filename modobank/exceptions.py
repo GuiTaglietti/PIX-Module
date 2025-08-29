@@ -27,8 +27,12 @@ class ChargeError(ModobankError):
         message = "{ 'Status': " + str(status) + ", 'Message': 'Failed to create charge.' } "
         super(ChargeError, self).__init__(message)
 
-
 class DateError(ModobankError):
     def __init__(self, status):
         message = "{ 'Status': " + str(status) + ", 'Message': 'Date format is not valid.' } "
         super(DateError, self).__init__(message)
+
+class WebhookError(ModobankError):
+    def __init__(self, status):
+        message = "{ 'Status': " + str(status) + ", 'Message': 'Failed to create webhook.' } "
+        super(WebhookError, self).__init__(message)

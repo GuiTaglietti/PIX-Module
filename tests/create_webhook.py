@@ -11,6 +11,7 @@ credentials = {
 
 modobank = Modobank(credentials)
 
-response = modobank.create_webhook(txid="b6189c0ef24eeaa30831e566b1bdd3")
+response = modobank.create_webhook(txid="345b9f42df4d13a2585822a3247a65")
+
 
 print(response)
