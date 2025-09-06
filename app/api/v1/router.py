@@ -4,17 +4,15 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import Optional
 from app.store.repository import Repository
 from app.models.schemas import CreateUserRequest, UserResponse, CreatePaymentRequest, PaymentResponse, WebhookPix, PaymentStatus
-#from app.services.pix.efipay import Efipay, PixError
-from app.services.pix.modobank import Modobank, PixError
+from app.services.pix import Pix, PixError
 from app.container import container
 
-router = APIRouter(prefix="/api/v1")
+router = APIRouter(prefix="/api/v1") # TODO: implement OAuth2
 
 def get_repo() -> Repository:
     return container["repo"]
 
-def get_psp() -> Modobank:
-#def get_psp() -> Efipay:
+def get_psp() -> Pix:
     return container["psp"]
 
 @router.post("/users", response_model=UserResponse)
@@ -22,15 +20,14 @@ def create_user(req: CreateUserRequest, repo: Repository = Depends(get_repo)) ->
     user = repo.get_or_create_user(req.cpf, req.email, req.name)
     return UserResponse(cpf=user.cpf, email=user.email, name=user.name)
 
-@router.post("/payments/pix", response_model=PaymentResponse)
-def create_payment(req: CreatePaymentRequest, repo: Repository = Depends(get_repo), psp: Modobank = Depends(get_psp)) -> PaymentResponse:
-#def create_cob(req: CreatePaymentRequest, repo: Repository = Depends(get_repo), psp: Efipay = Depends(get_psp)) -> PaymentResponse:
+@router.post("/pix", response_model=PaymentResponse)
+def create_immediate_charge(req: CreatePaymentRequest, repo: Repository = Depends(get_repo), psp: Pix = Depends(get_psp)) -> PaymentResponse:
     if req.amount <= 0:
         raise HTTPException(status_code=422, detail="amount must be positive")
     try:
         amount_str = f"{req.amount:.2f}"
 
-        response = psp.create_immediate(value=amount_str, cpf=req.cpf, name=req.name)
+        response = psp.create_immediate_charge(amount=amount_str, cpf=req.cpf, name=req.name)
         txid = response.get("txid")
         pixCopiaECola = response.get("pixCopiaECola")
         
@@ -62,8 +59,8 @@ def create_payment(req: CreatePaymentRequest, repo: Repository = Depends(get_rep
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create payment: {str(e)}")
 
-@router.get("/payments/pix/{txid}", response_model=PaymentResponse)
-def get_payment(txid: str, repo: Repository = Depends(get_repo)) -> PaymentResponse:
+@router.get("/pix/{txid}", response_model=PaymentResponse)
+def detail_immediate_charge(txid: str, repo: Repository = Depends(get_repo)) -> PaymentResponse:
     payment = repo.get_payment(txid)
     if not payment:
         raise HTTPException(status_code=404, detail="Payment not found")
@@ -76,16 +73,14 @@ def get_payment(txid: str, repo: Repository = Depends(get_repo)) -> PaymentRespo
         pixCopiaECola=payment.pixCopiaECola,
     )
 
-# NOTE: this was not tested after refactor
-@router.post("/payments/pix/{txid}/check", response_model=PaymentResponse)
-#def check_payment_status(txid: str, repo: Repository = Depends(get_repo), psp: Efipay = Depends(get_psp)) -> PaymentResponse:
-def check_payment_status(txid: str, repo: Repository = Depends(get_repo), psp: Modobank = Depends(get_psp)) -> PaymentResponse:
+@router.post("/pix/{txid}", response_model=PaymentResponse)
+def check_payment_status(txid: str, repo: Repository = Depends(get_repo), psp: Pix = Depends(get_psp)) -> PaymentResponse:
     try:
         payment = repo.get_payment(txid)
         if not payment:
             raise HTTPException(status_code=404, detail="Payment not found")
         
-        response = psp.detail_immediate(txid)
+        response = psp.detail_immediate_charge(txid)
         status = response.get("status", "").upper()
         
         if status in ["CONCLUIDA"]:
@@ -115,18 +110,15 @@ def check_payment_status(txid: str, repo: Repository = Depends(get_repo), psp: M
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to check payment status")
 
-# NOTE: this was not tested after refactor
-@router.get("/payments/pix")
-#def list_payments(inicio: str, fim: str, psp: Efipay = Depends(get_psp)) -> dict:
-def list_payments(inicio: str, fim: str, psp: Modobank = Depends(get_psp)) -> dict:
+@router.get("/pix")
+def list_immediate_charges(inicio: str, fim: str, psp: Pix = Depends(get_psp)) -> dict:
     try:
-        return psp.list_immediate(inicio, fim)
+        return psp.list_immediate_charges(inicio, fim)
     except PixError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to list payments")
 
-# NOTE: i dont even know if it works
 @router.post("/webhooks/pix")
 def immediate_webhook(webhook: WebhookPix, repo: Repository = Depends(get_repo)):
     try:

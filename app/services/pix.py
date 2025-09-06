@@ -1,4 +1,4 @@
-# app/services/pix/modobank.py
+# app/services/pix.py
 from __future__ import annotations
 import os
 import re
@@ -12,12 +12,45 @@ import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+class PixError(Exception): # NOTE: should the exceptions stay in another file?
+    def __init__(self, msg):
+        self.msg = msg
 
-class PixError(Exception):
-    pass
+    def __str__(self):
+        return repr(self.msg)
+
+class AuthenticationError(PixError):
+    def __init__(self, status):
+        message = "{ 'Status': " + str(status) + ", 'Message': 'Could not authenticate.' } "
+        super(AuthenticationError, self).__init__(message)
+
+class AmountError(PixError):
+    def __init__(self, status):
+        message = "{ 'Status': " + str(status) + ", 'Message': 'Amount is not valid.' } "
+        super(AmountError, self).__init__(message)
+
+class TxidError(PixError):
+    def __init__(self, status):
+        message = "{ 'Status': " + str(status) + ", 'Message': 'txid is not valid.' } "
+        super(TxidError, self).__init__(message)
+
+class ChargeError(PixError):
+    def __init__(self, status):
+        message = "{ 'Status': " + str(status) + ", 'Message': 'Failed to create charge.' } "
+        super(ChargeError, self).__init__(message)
+
+class DateError(PixError):
+    def __init__(self, status):
+        message = "{ 'Status': " + str(status) + ", 'Message': 'Date format is not valid.' } "
+        super(DateError, self).__init__(message)
+
+class WebhookError(PixError):
+    def __init__(self, status):
+        message = "{ 'Status': " + str(status) + ", 'Message': 'Failed to create webhook.' } "
+        super(WebhookError, self).__init__(message)
 
 
-class Modobank:
+class Pix:
     def __init__(self, settings: Settings):
         self.api_keys = {
             "API_CLIENT_ID": settings.psp_client_id,
@@ -42,55 +75,70 @@ class Modobank:
 
     @property
     def bearer(self) -> str:
+        """ 
+        @property method -> self._bearer
+        """
         if not self._bearer or self._is_token_expired():
             self._bearer = self._auth()
-            self._bearer_expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
+            self._bearer_expires_at = datetime.now(timezone.utc) + timedelta(seconds=300)
         return self._bearer
 
 
-    def create_immediate(self, value: str, cpf: CPF, name: str, txid: str = "") -> dict:
+    def create_immediate_charge(self,
+                         amount: str,
+                         cpf: str,
+                         name: str,
+                         txid: str = "",
+                         expiration: str = "600") -> dict:
         """ 
         Create an immediate charge
 
         Parameters:
-            inicio (str): date in 'yyyy-mm-dd-hh-mm-ss' lookup starting point
-            fim (str): date in 'yyyy-mm-dd-hh-mm-ss' lookup date limit
+            amount (str): amount to charge
+            cpf (str): the CPF of the person requesting the charge
+            txid (str, optional): optional txid
+            expiration (str, optional): optional expiration
         Returns:
-            (dict): the actual response of the Modobank API
+            (dict): the actual response of the PSP Pix API
         """
-        if self._amount_is_not_valid(value):
-            raise PixError("Invalid value format. Expected: '^[0-9]{1,10}\\.[0-9]{2}$'")
+        if not self._amount_format_is_valid(amount):            
+            # TODO: better exception handling
+            raise AmountError(404)
 
         # TODO: check if txid is "" in case the programmer wants to create an immediate with an specific txid
 
         url = f"{self.domain}/cob"
+
         headers = { 
             "Authorization": f"Bearer {self.bearer}",
             "Content-Type": "application/json"
         }
+
         data = {
             "calendario": {
-                "expiracao": 600
+                "expiracao": expiration
             },
             "devedor": {
                 "cpf": cpf,
                 "nome": name
             },
             "valor": {
-                "original": value
+                "original": amount
                 },
             "chave": self.pix_key
         }
+
         try:
             # NOTE: read online this 'verify=False' is risky but it doesn't work without it
             response = requests.post(url, headers=headers, json=data, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()
-        except requests.exceptions.RequestException as e:
-            raise PixError(f"Failed to create payment: {str(e)}")
+        except requests.exceptions.RequestException as e:           
+            # TODO: better exception handling
+            raise ChargeError(404)
 
 
-    def list_immediate(self, inicio: str, fim: str) -> dict: # NOTE: not tested after refactor
+    def list_immediate_charges(self, inicio: str, fim: str) -> dict:
         """ 
         List immediate charges between 'inicio' and 'fim'
 
@@ -98,16 +146,19 @@ class Modobank:
             inicio (str): date in 'yyyy-mm-dd-hh-mm-ss' lookup starting point
             fim (str): date in 'yyyy-mm-dd-hh-mm-ss' lookup date limit
         Returns:
-            (dict): the actual response of the Modobank API
+            (dict): the actual response of the PSP Pix API
         """
-        if not (self._date_format_is_valid(inicio) and self._date_format_is_valid(fim)):
-            raise PixError("Date format should be yyyy-mm-dd-hh-mm-ss")
+        if not (self._date_format_is_valid(inicio) and self._date_format_is_valid(fim)):     
+            # TODO: better exception handling
+            raise DateError(404)
 
         url = f"{self.domain}/cob/"
+
         headers = { 
             "Authorization": f"Bearer {self.bearer}",
             "Content-Type": "application/json"
         }
+
         payload = {
             "inicio": self._to_rfc3339(inicio),
             "fim": self._to_rfc3339(fim)
@@ -117,61 +168,111 @@ class Modobank:
             response = requests.get(url, headers=headers, params=payload, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()
-        except requests.exceptions.RequestException as e:
-            raise PixError(f"Failed to list payments: {str(e)}")
+        except requests.exceptions.RequestException as e:           
+            # TODO: better exception handling
+            raise ChargeError(404)
 
 
     # NOTE: not tested after refactor
-    def detail_immediate(self, txid: str) -> dict:
+    def detail_immediate_charge(self, txid: str) -> str: # TODO: better typing
         """ 
         Details about an immediate charge associated with the txid provided
 
         Returns:
-            (dict): the actual response of the Modobank API
+            (dict): the actual response of the PSP Pix API
         """
-        if not self._txid_format_is_valid(txid):
-            raise PixError("Invalid txid format")
+        if not self._txid_format_is_valid(txid):            
+            # TODO: better exception handling
+            raise TxidError(404)
 
         url = f"{self.domain}/cob/{txid}"
+
         headers = { 
             "Authorization": f"Bearer {self.bearer}",
             "Content-Type": "application/json"
+        }
+
+        data = {
+                "webhookUrl": "https://"
         }
         try:
             # NOTE: read online this 'verify=False' is risky but it doesn't work without it
             response = requests.get(url, headers=headers, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()
-        except requests.exceptions.RequestException as e:
-            raise PixError(f"Failed to get payment details: {str(e)}")
+        except requests.exceptions.RequestException as e:           
+            # TODO: better exception handling
+            raise ChargeError(404)
+
+
+    def create_webhook(self, txid:str):
+        # TODO: `create_webhook()` doc
+        """
+        Create a webhook for the payment associated with the txid provided.
+
+        Parameters:
+            txid (str): Transaction ID to monitor
+        Returns:
+        """
+        if not self._txid_format_is_valid(txid):            
+            # TODO: better exception handling
+            raise TxidError(404)
+
+        url = f"{self.domain}/webhook/{txid}"
+
+        headers = { 
+            "Authorization": f"Bearer {self.bearer}",
+            "Content-Type": "application/json"
+        }
+
+        # FIXME: i didn't understand the request data
+        #
+        #   [doc](https://developers.onz.software/reference/qrcodes/#tag/Webhook/paths/~1webhook~1%7Bchave%7D/put)
+        #
+        data = {
+            "webhookUrl": "TODO!!"
+        }
+
+        try:
+            # NOTE: read online this 'verify=False' is risky but it doesn't work without it
+            response = requests.put(url, headers=headers, cert=self.certificate, verify=False)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:            
+            # TODO: better exception handling
+            raise WebhookError(404)
+
 
 
     def _auth(self) -> str:
         """ 
-        Modobank API OAuth authentication request
+        PSP Pix API OAuth authentication request
 
         Returns:
             (str): Bearer access token
         """
         url = f"{self.domain}/oauth/token"
+
         data = {
             'client_id': self.api_keys['API_CLIENT_ID'],
             'client_secret': self.api_keys['API_CLIENT_SECRET'],
             'grant_type': 'client_credentials'
         }
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+
+        headers = {'Content-Type': 'application/json'}
         
         try:
             # NOTE: read online this 'verify=False' is risky but it doesn't work without it
-            response = requests.post(url, data=data, headers=headers, cert=self.certificate, verify=False)
+            response = requests.post(url, json=data, headers=headers, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()['access_token']
-        except requests.exceptions.RequestException as e:
-            raise PixError(f"Authentication failed: {str(e)}")
+        except requests.exceptions.RequestException as e:             
+            # TODO: better exception handling
+            raise AuthenticationError(404)
 
     def _is_token_expired(self) -> bool:
         """ 
-        Check if the Modobank Acess Token expired
+        Check if the PSP Pix Acess Token expired
 
         Returns:
             (bool): True if token expired, False otherwise
@@ -180,28 +281,28 @@ class Modobank:
             return True
         return datetime.now() >= self._bearer_expires_at
 
-    def _amount_is_not_valid(self, amount: str) -> bool:
+    def _amount_format_is_valid(self, amount: str) -> bool:
         """ 
-        Check if an amount is in a valid format
+        Check if an amount is in '^[0-9]{1,10}\\.[0-9]{2}$' format
 
         Parameters:
             amount (str): amount string
         Returns:
-            (bool): True if amount format is not valid, False otherwise
+            (bool): True if amount format is valid, False otherwise
         """
         pattern = r"^[0-9]{1,10}\.[0-9]{2}$"
-        return not bool(re.fullmatch(pattern, amount))
+        return bool(re.fullmatch(pattern, amount))
 
     def _txid_format_is_valid(self, txid: str) -> bool:
         """ 
-        Check if txid format is valid
+        Check if txid format is in '^[a-za-z0-9]{26,35}$' format
 
         Parameters:
             txid (str): txid string
         Returns:
             (bool): True if txid format is valid, False otherwise
         """
-        pattern = r"^[a-zA-Z0-9]{26,35}$"
+        pattern = r"^[a-za-z0-9]{26,35}$"
         return bool(re.match(pattern, txid))
 
     def _date_format_is_valid(self, date_string: str) -> bool:
@@ -233,15 +334,3 @@ class Modobank:
         dt_utc = dt.replace(tzinfo=timezone.utc)
         return dt_utc.isoformat()
 
-    def _save_to_file(self, filename: str, response: dict):
-        """ 
-        Vintage way to write logs
-
-        Parameters:
-            filename (str): name to be added to the file name
-            response (dict): response to save
-        """
-        os.makedirs("logs", exist_ok=True)
-        date = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        with open(f"logs/{date}-{filename}.json", "w", encoding="utf-8") as f:
-            json.dump(response, f, ensure_ascii=False, indent=4)

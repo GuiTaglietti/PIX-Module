@@ -1,24 +1,23 @@
-# app/config_modobank.py
+# app/config.py
 from __future__ import annotations
 import os
 from dotenv import load_dotenv
 from dataclasses import dataclass
 from typing import Optional
 
-load_dotenv() # NOTE: i think is better to load it without using a library
+load_dotenv()
 
 @dataclass
 class Settings: # NOTE: is it safe to leave the keys in this class??
-    app_name: str = "Vaquinha"
+    app_name: str = "PIX-Module"
     debug: bool = os.getenv("DEBUG", "0") == "1"
     database_url: Optional[str] = os.getenv("DATABASE_URL")
     psp_client_id: Optional[str] = os.getenv("MODOBANK_CLIENT_ID")
     psp_client_secret: Optional[str] = os.getenv("MODOBANK_CLIENT_SECRET")
-    # NOTE: we only use the .crt and .key but .pfx is here in case we want it to be
     psp_pfx_path: Optional[str] = os.getenv("MODOBANK_PFX_PATH")
     psp_crt_path: Optional[str] = os.getenv("MODOBANK_CRT_PATH")
     psp_key_path: Optional[str] = os.getenv("MODOBANK_KEY_PATH")
-    psp_pix_key: Optional[str] = os.getenv("MODOBANK_PIX_KEY")
+    psp_pix_key: Optional[str] = os.getenv("RECEIVER_PIX_KEY")
     auto_create: bool = True
 
     def __post_init__(self):
@@ -26,7 +25,7 @@ class Settings: # NOTE: is it safe to leave the keys in this class??
             ("DATABASE_URL", self.database_url),
             ("MODOBANK_CLIENT_ID", self.psp_client_id),
             ("MODOBANK_CLIENT_SECRET", self.psp_client_secret),
-            ("MODOBANK_PIX_KEY", self.psp_pix_key),
+            ("RECEIVER_PIX_KEY", self.psp_pix_key),
         ]
         cert_vars = [
             ("MODOBANK_CRT_PATH", self.psp_crt_path),

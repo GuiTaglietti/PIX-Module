@@ -30,8 +30,8 @@ class UserResponse(BaseModel):
 
 class CreatePaymentRequest(BaseModel): # TODO: see which data we want to send in the payment request
     # created at
-    cpf: CPF
     amount: float = Field(..., gt=0, description="Amount in BRL")
+    cpf: CPF
     name: str
     email: str
     # aditional info
