@@ -52,6 +52,7 @@ class WebhookError(PixError):
 
 class Pix:
     def __init__(self, settings: Settings):
+        self.expiration = settings.expiration
         self.api_keys = {
             "API_CLIENT_ID": settings.psp_client_id,
             "API_CLIENT_SECRET": settings.psp_client_secret,
@@ -88,8 +89,7 @@ class Pix:
                          amount: str,
                          cpf: str,
                          name: str,
-                         txid: str = "",
-                         expiration: str = "600") -> dict:
+                         txid: str = "") -> dict:
         """ 
         Create an immediate charge
 
@@ -97,7 +97,6 @@ class Pix:
             amount (str): amount to charge
             cpf (str): the CPF of the person requesting the charge
             txid (str, optional): optional txid
-            expiration (str, optional): optional expiration
         Returns:
             (dict): the actual response of the PSP Pix API
         """
@@ -116,7 +115,7 @@ class Pix:
 
         data = {
             "calendario": {
-                "expiracao": expiration
+                "expiracao": self.expiration
             },
             "devedor": {
                 "cpf": cpf,

@@ -11,6 +11,7 @@ load_dotenv()
 class Settings: # NOTE: is it safe to leave the keys in this class??
     app_name: str = "PIX-Module"
     debug: bool = os.getenv("DEBUG", "0") == "1"
+    expiration: int = os.getenv("EXPIRATION")
     database_url: Optional[str] = os.getenv("DATABASE_URL")
     psp_client_id: Optional[str] = os.getenv("MODOBANK_CLIENT_ID")
     psp_client_secret: Optional[str] = os.getenv("MODOBANK_CLIENT_SECRET")

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
-# Tests the Vaquinha API payment creation
+# Tests the PIX Module immediate charge creation
 
 curl --request POST \
-     --url "http://127.0.0.1:8000/api/v1/payments/pix" \
+     --url "http://127.0.0.1:8000/api/v1/pix" \
      --header "Content-Type: application/json" \
      --data '{
        "cpf": "44401970004",
