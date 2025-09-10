@@ -3,7 +3,7 @@
 if [[ "$#" != 1 ]];then
     echo "usage: $0 <txid>"
 else
-    curl    --request GET \
+    curl    --request POST \
             --url "http://127.0.0.1:8000/api/v1/pix/$1" \
             --header "Content-Type: application/x-www-form-urlencoded" && echo ""
 fi

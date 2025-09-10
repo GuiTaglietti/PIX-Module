@@ -3,6 +3,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field, EmailStr
 from pydantic_br import CPF
 from enum import Enum
+from typing import Optional, Dict, Any
 
 class PaymentStatus(str, Enum):
     ACTIVE = "ATIVA"
@@ -48,3 +49,12 @@ class PaymentResponse(BaseModel): # TODO: RFC-3339 to unix epoch or another post
 class WebhookPix(BaseModel):
     txid: str
     status: PaymentStatus
+
+class WebhookRequest(BaseModel):
+    webhook_url: str
+    
+class WebhookResponse(BaseModel):
+    webhook_url: str
+    status: str
+    message: str
+    psp_response: Optional[Dict[Any, Any]] = None

@@ -7,7 +7,7 @@ curl --request POST \
      --header "Content-Type: application/json" \
      --data '{
        "cpf": "44401970004",
-       "amount": "1.00",
+       "amount": "0.01",
        "name": "Guilherme Ganassini",
        "email": "gana@gmail.com"
      }'

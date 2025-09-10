@@ -84,7 +84,6 @@ class Pix:
             self._bearer_expires_at = datetime.now(timezone.utc) + timedelta(seconds=300)
         return self._bearer
 
-
     def create_immediate_charge(self,
                          amount: str,
                          cpf: str,
@@ -102,7 +101,7 @@ class Pix:
         """
         if not self._amount_format_is_valid(amount):            
             # TODO: better exception handling
-            raise AmountError(404)
+            raise AmountError(response.status_code)
 
         # TODO: check if txid is "" in case the programmer wants to create an immediate with an specific txid
 
@@ -134,7 +133,7 @@ class Pix:
             return response.json()
         except requests.exceptions.RequestException as e:           
             # TODO: better exception handling
-            raise ChargeError(404)
+            raise ChargeError(response.status_code)
 
 
     def list_immediate_charges(self, inicio: str, fim: str) -> dict:
@@ -149,7 +148,7 @@ class Pix:
         """
         if not (self._date_format_is_valid(inicio) and self._date_format_is_valid(fim)):     
             # TODO: better exception handling
-            raise DateError(404)
+            raise DateError(response.status_code)
 
         url = f"{self.domain}/cob/"
 
@@ -169,7 +168,7 @@ class Pix:
             return response.json()
         except requests.exceptions.RequestException as e:           
             # TODO: better exception handling
-            raise ChargeError(404)
+            raise ChargeError(response.status_code)
 
 
     # NOTE: not tested after refactor
@@ -182,7 +181,7 @@ class Pix:
         """
         if not self._txid_format_is_valid(txid):            
             # TODO: better exception handling
-            raise TxidError(404)
+            raise TxidError(response.status_code)
 
         url = f"{self.domain}/cob/{txid}"
 
@@ -201,46 +200,83 @@ class Pix:
             return response.json()
         except requests.exceptions.RequestException as e:           
             # TODO: better exception handling
-            raise ChargeError(404)
+            raise ChargeError(response.status_code)
 
 
-    def create_webhook(self, txid:str):
-        # TODO: `create_webhook()` doc
+    def create_webhook(self, webhook_url: str) -> dict:
         """
-        Create a webhook for the payment associated with the txid provided.
-
+        Create a webhook to receive notifications for PIX transactions.
+        
         Parameters:
-            txid (str): Transaction ID to monitor
+            webhook_url (str): URL where webhook notifications will be sent
         Returns:
+            (dict): the actual response of the PSP Pix API
         """
-        if not self._txid_format_is_valid(txid):            
-            # TODO: better exception handling
-            raise TxidError(404)
-
-        url = f"{self.domain}/webhook/{txid}"
-
+        if not webhook_url.startswith(('http://')):
+            raise WebhookError(400)
+        
+        url = f"{self.domain}/webhook/{self.pix_key}"
+        
         headers = { 
             "Authorization": f"Bearer {self.bearer}",
             "Content-Type": "application/json"
         }
-
-        # FIXME: i didn't understand the request data
-        #
-        #   [doc](https://developers.onz.software/reference/qrcodes/#tag/Webhook/paths/~1webhook~1%7Bchave%7D/put)
-        #
+        
         data = {
-            "webhookUrl": "TODO!!"
+            "webhookUrl": webhook_url
         }
-
+        
         try:
-            # NOTE: read online this 'verify=False' is risky but it doesn't work without it
-            response = requests.put(url, headers=headers, cert=self.certificate, verify=False)
+            response = requests.put(url, headers=headers, json=data, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:            
             # TODO: better exception handling
-            raise WebhookError(404)
+            raise WebhookError(response.status_code)
 
+
+    def delete_webhook(self) -> dict:
+        """
+        Delete the existing webhook for this PIX key.
+        
+        Returns:
+            (dict): the actual response of the PSP Pix API
+        """
+        url = f"{self.domain}/webhook/{self.pix_key}"
+        
+        headers = { 
+            "Authorization": f"Bearer {self.bearer}",
+            "Content-Type": "application/json"
+        }
+        
+        try:
+            response = requests.delete(url, headers=headers, cert=self.certificate, verify=False)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:            
+            raise WebhookError(response.status_code)
+
+
+    def get_webhook(self) -> dict:
+        """
+        Get the current webhook configuration for this PIX key.
+        
+        Returns:
+            (dict): the actual response of the PSP Pix API
+        """
+        url = f"{self.domain}/webhook/{self.pix_key}"
+        
+        headers = { 
+            "Authorization": f"Bearer {self.bearer}",
+            "Content-Type": "application/json"
+        }
+        
+        try:
+            response = requests.get(url, headers=headers, cert=self.certificate, verify=False)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:            
+            raise WebhookError(response.status_code)
 
 
     def _auth(self) -> str:
@@ -267,18 +303,18 @@ class Pix:
             return response.json()['access_token']
         except requests.exceptions.RequestException as e:             
             # TODO: better exception handling
-            raise AuthenticationError(404)
+            raise AuthenticationError(response.status_code)
 
     def _is_token_expired(self) -> bool:
         """ 
-        Check if the PSP Pix Acess Token expired
+        Check if the PSP Pix Access Token expired
 
         Returns:
             (bool): True if token expired, False otherwise
         """
         if not self._bearer_expires_at:
             return True
-        return datetime.now() >= self._bearer_expires_at
+        return datetime.now(timezone.utc) >= self._bearer_expires_at
 
     def _amount_format_is_valid(self, amount: str) -> bool:
         """ 

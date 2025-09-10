@@ -8,7 +8,6 @@ PIX dedicated decoupled module. The goal is create a module that can be used on 
 [Modobank API Documentation](https://developers.onz.software/reference/qrcodes/) <br>
 [FasAPI()](https://fastapi.tiangolo.com/reference/fastapi/#fastapi.FastAPI) <br>
 [psycopg](https://www.psycopg.org/docs/usage.html) <br>
-[OAuth2](https://fastapi.tiangolo.com/tutorial/security/#openapi)
 
 ## Tutorial
 
@@ -43,7 +42,8 @@ uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ├── tests/
 │   ├── create_user                 # curl script para testar criação de usuários
 │   ├── create_immediate_charge     # curl script para testar criação de cobranças
-│   └── detail_immediate_charges    # curl script para testar detalhamento de cobranças
+│   ├── detail_immediate_charges    # curl script para testar detalhamento de cobranças
+│   └── create_webhook              # curl script para criar um webhook
 ├── launch                          # script pra iniciar o server
 ├── requirements.txt                # dependências
 ├── LICENSE                         # licença
