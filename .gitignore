@@ -143,9 +143,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-scripts/
-Certificados/
 tags
+**/keys.json
 
 # Spyder project settings
 .spyderproject

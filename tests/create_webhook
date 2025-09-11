@@ -4,6 +4,7 @@
 
 curl  -X POST "http://localhost:8000/api/v1/webhooks/config" \
       -H "Content-Type: application/json" \
+      -H "Authorization: Bearer aEaItIjAYmSt-hQbThtQf6LHE-rrg-hXcWUYFZG2D84"
       -d '{
-        "webhook_url": "https://localhost:8000/api/v1/webhooks/pix"
+        "webhook_url": "ngrok website etc"
       }'

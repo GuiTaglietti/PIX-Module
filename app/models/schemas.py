@@ -46,6 +46,9 @@ class PaymentResponse(BaseModel): # TODO: RFC-3339 to unix epoch or another post
     pixCopiaECola: str
     # aditional info
 
+class PaymentStatusUpdate(BaseModel):
+    status: PaymentStatus
+
 class WebhookPix(BaseModel):
     txid: str
     status: PaymentStatus

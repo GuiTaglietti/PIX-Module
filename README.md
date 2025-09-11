@@ -21,6 +21,12 @@ uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ./launch
 ```
 
+## TODO
+
+* ___Database___: user and payment collected data
+* ___Auth___: accept multiple `API_KEY`'s
+* ...
+
 
 ## Estrutura do diretório raiz
 
@@ -37,6 +43,7 @@ uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 │   │   ├── db.py                   # funções de query e conexão à base de dados
 │   │   └── repository.py           # modelagem do banco de dados
 │   ├── main.py                     # ponto de entrada da aplicação
+│   ├── auth.py                     # keys aceitas
 │   ├── config.py                   # credenciais e database URL
 │   └── container.py                # banco de dados, psp
 ├── tests/
@@ -44,6 +51,8 @@ uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 │   ├── create_immediate_charge     # curl script para testar criação de cobranças
 │   ├── detail_immediate_charges    # curl script para testar detalhamento de cobranças
 │   └── create_webhook              # curl script para criar um webhook
+├── scripts/
+│   └── generate_key                # python script para gerar uma chave SHA-256
 ├── launch                          # script pra iniciar o server
 ├── requirements.txt                # dependências
 ├── LICENSE                         # licença

@@ -5,6 +5,7 @@
 curl --request POST \
      --url "http://127.0.0.1:8000/api/v1/pix" \
      --header "Content-Type: application/json" \
+     --header "Authorization: Bearer aEaItIjAYmSt-hQbThtQf6LHE-rrg-hXcWUYFZG2D84" \
      --data '{
        "cpf": "44401970004",
        "amount": "0.01",
