@@ -11,6 +11,11 @@ from app.services.pix import Pix, PixError, WebhookError
 from app.container import container
 from app.auth import get_api_key
 
+import os, time, hmac, hashlib, json, httpx
+
+BACKEND_WEBHOOK_URL = os.getenv("BACKEND_WEBHOOK_URL")
+BACKEND_WEBHOOK_SECRET = os.getenv("BACKEND_WEBHOOK_SECRET", "")
+
 router = APIRouter(prefix="/api/v1")
 
 def get_repo() -> Repository:
@@ -151,7 +156,6 @@ def update_payment_status(
         )
         
     except PixError as e:
-        logger.error(f"PIX error updating payment status for {txid}: {e}")
         raise HTTPException(status_code=400, detail=str(e))
     except HTTPException:
         raise
@@ -252,6 +256,7 @@ def delete_webhook(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete webhook: {str(e)}")
 
+
 @router.post("/webhooks/pix")
 def receive_pix_webhook(
     webhook: WebhookPix, 
@@ -259,24 +264,48 @@ def receive_pix_webhook(
     repo: Repository = Depends(get_repo)
 ):
     """
-    Receive webhook notifications from PSP when payments are made. # TODO: documentation
+    Recebe o webhook do PSP; atualiza o status local
+    e (se configurado) encaminha para o backend com HMAC.
     """
     try:
-        client_ip = request.client.host if request.client else "unknown"
-        
         payment = repo.set_status(webhook.txid, webhook.status)
         if not payment:
             raise HTTPException(status_code=404, detail="Payment not found")
-        
+
+        if BACKEND_WEBHOOK_URL and BACKEND_WEBHOOK_SECRET:
+            payload = {
+                "txid": webhook.txid,
+                "new_status": webhook.status.value,
+            }
+            body = json.dumps(payload).encode()
+            ts = str(int(time.time()))
+            sig = hmac.new(
+                BACKEND_WEBHOOK_SECRET.encode(),
+                f"{ts}.".encode() + body,
+                hashlib.sha256
+            ).hexdigest()
+
+            headers = {
+                "Content-Type": "application/json",
+                "X-Timestamp": ts,
+                "X-Signature": sig,
+            }
+
+            try:
+                with httpx.Client(timeout=5.0) as cli:
+                    cli.post(BACKEND_WEBHOOK_URL, headers=headers, content=body)
+            except Exception:
+                pass
+
         return {
             "status": "ok",
             "message": "Payment updated successfully",
             "txid": webhook.txid,
             "new_status": webhook.status.value
         }
-        
+
     except HTTPException:
         raise
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Failed to process webhook")
 

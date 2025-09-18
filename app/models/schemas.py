@@ -11,7 +11,7 @@ class PaymentStatus(str, Enum):
     REMOVED_BY_USER = "REMOVIDA_PELO_USUARIO_RECEBEDOR"
     REMOVED_BY_PSP = "REMOVIDA_PELO_PSP"
 
-class CreateUserRequest(BaseModel): # TODO: ask Paulinho which data we wish to collect
+class CreateUserRequest(BaseModel):
     # password
     # agency: Optional[str] = None
     # account: Optional[str] = None
@@ -29,7 +29,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     name: str
 
-class CreatePaymentRequest(BaseModel): # TODO: see which data we want to send in the payment request
+class CreatePaymentRequest(BaseModel):
     # created at
     amount: float = Field(..., gt=0, description="Amount in BRL")
     cpf: CPF
@@ -44,7 +44,6 @@ class PaymentResponse(BaseModel): # TODO: RFC-3339 to unix epoch or another post
     user_cpf: CPF
     amount: float = Field(..., gt=0, description="Amount in BRL")
     pixCopiaECola: str
-    # aditional info
 
 class PaymentStatusUpdate(BaseModel):
     status: PaymentStatus
