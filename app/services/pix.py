@@ -7,6 +7,7 @@ import requests
 from datetime import datetime, timezone, timedelta
 from app.config import Settings
 from typing import Optional
+from urllib.parse import urlparse
 
 import urllib3
 
@@ -203,37 +204,27 @@ class Pix:
             raise ChargeError(response.status_code)
 
 
-    def create_webhook(self, webhook_url: str) -> dict:
-        """
-        Create a webhook to receive notifications for PIX transactions.
-        
-        Parameters:
-            webhook_url (str): URL where webhook notifications will be sent
-        Returns:
-            (dict): the actual response of the PSP Pix API
-        """
-        if not webhook_url.startswith(('http://')):
+    def _validate_webhook_url(self, webhook_url: str) -> None:
+        try:
+            u = urlparse(webhook_url)
+            if u.scheme not in ("http", "https") or not u.netloc:
+                raise ValueError
+        except Exception:
             raise WebhookError(400)
-        
+
+    def create_webhook(self, webhook_url: str) -> dict:
+        self._validate_webhook_url(webhook_url)
         url = f"{self.domain}/webhook/{self.pix_key}"
-        
-        headers = { 
-            "Authorization": f"Bearer {self.bearer}",
-            "Content-Type": "application/json"
-        }
-        
-        data = {
-            "webhookUrl": webhook_url
-        }
+        headers = {"Authorization": f"Bearer {self.bearer}", "Content-Type": "application/json"}
+        data = {"webhookUrl": webhook_url}
         
         try:
             response = requests.put(url, headers=headers, json=data, cert=self.certificate, verify=False)
             response.raise_for_status()
             return response.json()
-        except requests.exceptions.RequestException as e:            
-            # TODO: better exception handling
-            raise WebhookError(response.status_code)
-
+        
+        except requests.exceptions.RequestException:
+            raise WebhookError(502)
 
     def delete_webhook(self) -> dict:
         """
